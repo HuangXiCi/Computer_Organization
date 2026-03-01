@@ -1,0 +1,66 @@
+.. 深圳理工大学-计算机组成原理-实验课程 documentation master file, created by
+   sphinx-quickstart on Tue Jan 17 15:53:03 2026.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. 这一页是目录树
+
+
+深圳理工大学 计算机组成原理 实验课程
+=============================================================
+
+.. figure:: ./picture/index/logo.jpg
+   :alt: suat_logo
+   :align: center
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 实验课程目录
+   :hidden:
+
+   实验一 汇编程序与调试 <labs/lab1>
+   敬请期待 <labs/TODO.rst>
+
+
+课程介绍
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+本课程系统讲授计算机系统的基本组成和工作原理，旨在帮助学生深入理解计算机硬件和软件的协同工作机制。
+课程将详细讲授计算机单机系统的组成原理，讨论计算机组织与结构，即在硬件与软件功能分配中最基本的硬件系统。
+课程内容包含计算机主要部件类型、结构，组成和基本工作原理，讨论机内数据流、数据通路和控制方式等，
+使学生在硬件层面理解计算机系统，为后续深入学习操作系统、编译原理和体系结构设计奠定基础。
+通过课程学生将理解现代处理器设计的关键权衡，为未来参与嵌入式开发、高性能计算或芯片设计打下坚实基础。
+
+
+实验日程安排
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table:: E1班实验安排
+   :widths: 40 20 20
+   :header-rows: 1
+
+   * - 实验内容
+     - 实验时间
+     - 报告截止时间
+   * - Lab1 汇编程序与调试
+     - 2026-03-04
+     - 2026-03-15
+
+
+.. list-table:: E2班实验安排
+   :widths: 40 20 20
+   :header-rows: 1
+
+   * - 实验内容
+     - 实验时间
+     - 报告截止时间
+   * - Lab1 汇编程序与调试
+     - 2026-03-05
+     - 2026-03-15
+
+许可协议
+-----------------
+
+本作品采用知识共享署名-非商业性使用-相同方式共享3.0中国大陆许可协议进行许可。
+要查看该许可协议，可访问 `这里 <http://creativecommons.org/licenses/by-nc-sa/3.0/cn/>`_，
+或者写信到 Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.

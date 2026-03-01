@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>实验一 汇编程序与调试 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="There&#39;s nothing here" href="TODO.html" />
+    <link rel="prev" title="深圳理工大学 计算机组成原理 实验课程" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            深圳理工大学-计算机组成原理-实验课程
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">实验一 汇编程序与调试</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#qemu">1 QEMU 模拟器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1 QEMU 模拟器是什么</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">1.2 为什么需要模拟器</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2 获取代码框架</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">2.1 编译源文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">2.2 链接</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gdb">3 GDB 图形化调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">4 汇编函数编写</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">深圳理工大学-计算机组成原理-实验课程</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">实验一 汇编程序与调试</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/labs/lab1.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>实验一 汇编程序与调试<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本次实验使用QEMU模拟器模拟RISC-V计算机，熟悉和编写汇编语句，编写简单的等差数列求和程序。
+使用交叉编译工具链编译程序，在QEMU模拟器上运行并调试程序。</p>
+<section id="qemu">
+<h2>1 QEMU 模拟器<a class="headerlink" href="#qemu" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>1.1 QEMU 模拟器是什么<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>QEMU (Quick Emulator) 是一个开源的机器模拟器和虚拟化软件，可以模拟x86、ARM、RISC-V、PowerPC等多种处理器架构。
+QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong>User-mode emulation</strong> 和 <strong>Virtualization</strong> 。</p>
+<ol class="arabic simple">
+<li><p>Full-system emulation 几乎完全模拟整个处理器架构的特性，接近真实的硬件。</p></li>
+<li><p>User-mode emulation 用于运行 Linux/BSD 环境的应用程序。</p></li>
+<li><p>Virtualization 和 KVM 一起用于运行高性能虚拟机。</p></li>
+</ol>
+<p>我们本次实验是可以使用 Full-system emulation 或者 User-mode emulation 模式的，但是为了不引入函数调用规范等后续内容，
+使用 Full-system emulation 模拟 RISC-V 裸机环境，并且32位risc-v和64位risc-v对实验内容不会产生任何影响，因此使用 qemu-system-riscv64 模拟器。</p>
+</section>
+<section id="id3">
+<h3>1.2 为什么需要模拟器<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>模拟器可以在不同的指令集架构、系统下面运行，
+不需要真实的硬件系统，使用起来非常方便。
+并且可以进行非常低层次的调试，可以随时调试程序，</p>
+<p>还能够简化部分的硬件操作，不用掌握所有部分的硬件细节（比如硬盘）。
+对于初学 RISC-V ，学习特权级、学习操作系统都是非常好的方式。</p>
+</section>
+</section>
+<section id="id4">
+<h2>2 获取代码框架<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>我们为大家准备了一个简易的框架代码，本次实验只需要在上面修改即可。</p>
+<p>git clone <a class="reference external" href="https://github.com/HuangXiCi/yonex.git">https://github.com/HuangXiCi/yonex.git</a></p>
+<p>在代码仓库 yonex 的 Makefile 框架里面已经给出了如何编译程序和启动qemu，
+我们有很多配置参数，从上往下主要分为以下几个部分。</p>
+<p>在 Ubuntu 上安装 vscode ，可以在 vscode 官网下载 .deb 安装包，然后使用 sudo dpkg -i 包名.deb 进行安装。
+在 vscode 的设置中，搜索 Debug ，勾选上 <code class="docutils literal notranslate"><span class="pre">Debug:</span> <span class="pre">Allow</span> <span class="pre">Breakpoints</span> <span class="pre">Everywhere</span></code> ，允许在任何文件中打断点，
+这样就可以在汇编源文件中打断点调试。（TODO）</p>
+<p>在vscode在扩展中可以安装 RISC-V 扩展，即可对 risc-v 汇编文件语法高亮。（TODO）</p>
+<section id="id5">
+<h3>2.1 编译源文件<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>我们这次会编写汇编文件，如何将文件汇编为机器看得懂的二进制指令呢？
+我们将使用x86 Linux平台为riscv64编译裸机程序，需要使用交叉编译工具链。</p>
+<p>交叉编译是指使用一种平台的机器（如x86 Linux平台）编译另一种平台的机器（如RISC-V Linux平台）的程序，
+由于每个平台的差异很大，因此我们需要使用一套交叉编译工具链 riscv64-unknown-elf 工具链，目标是 riscv64 裸机平台。</p>
+<p>我们的框架代码内容不多，源文件在src目录下，有两个汇编源文件(.S)，boot.S和func.S，其中boot.S对 sp 寄存器初始化，
+然后通过 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">_func</span></code> 跳转到 func.S 中的 _func 函数， _func 函数是你需要完成的函数。</p>
+<p>补充跳转指令（TODO）</p>
+<p>gcc 可以根据文件后缀名自动判断如何处理文件，因此使用 riscv64-unknown-elf-gcc -c $(SRC) -o $(OBJ) 可以编译源文件。
+将汇编源文件(.S)汇编为可重定位文件(.o)，然后还需要进行链接操作，为我们的程序中可重定位的部分载入正确的地址。</p>
+<p>.S 和 .s 文件的区别（TODO）</p>
+</section>
+<section id="id6">
+<h3>2.2 链接<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>上面的跳转指令中提到，risc-v 拥有对当前 PC 值的相对跳转指令 jal 或者分支指令，我们称之为直接跳转；
+还有跳转到绝对地址的 jalr 跳转指令，通过寄存器值来进行跳转，我们称之为间接跳转。</p>
+<p>对于绝对跳转指令，我们必须要加载正确的地址，否则程序会运行不正确，
+而相对于 PC 值的直接跳转，则需要加载正确的偏移值。</p>
+<p>因此链接脚本就需要为程序指定位置，每个段应该放在哪里。</p>
+<p>（TODO）</p>
+</section>
+</section>
+<section id="gdb">
+<h2>3 GDB 图形化调试<a class="headerlink" href="#gdb" title="Link to this heading"></a></h2>
+<p>我们的框架中给出了 vscode gdb 调试 qemu。</p>
+<p>我们通过 make gdb 启动 qemu 等待调试，然后在左侧 Run and Debug 中开启 gdb 调试。（TODO）</p>
+</section>
+<section id="id7">
+<h2>4 汇编函数编写<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<p>4.1 等差数列求和</p>
+<p>4.2 斐波那契数列求和</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="../index.html" class="btn btn-neutral float-left" title="深圳理工大学 计算机组成原理 实验课程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="TODO.html" class="btn btn-neutral float-right" title="There&#39;s nothing here" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2026, 深圳理工大学。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
