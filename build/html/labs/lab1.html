@@ -161,13 +161,15 @@ git clone <a class="reference external" href="https://github.com/HuangXiCi/yonex
 <figure class="align-center">
 <img alt="learn_gdb" src="../_images/learn_gdb.png" />
 </figure>
-<p>代码会运行停留在这一行，默认在上方会有操作栏，下面从左往右介绍这些按钮功能：
-- Continue 继续执行，遇到下一个断点才会停下
-- Step Over 单步执行，但不会进入子函数内部，而是直接执行完成个子函数
-- Step Into 单步执行，如果遇到子函数，会进入子函数内部停下来
-- Step Out  当使用 Step Into 进入子函数内部时，使用 Step Out 就可以完成子函数余下的部分，并返回上一层函数
-- Restart 似乎不支持重启
-- Stop 停止 gdb 调试，并终止 qemu</p>
+<p>代码会运行停留在这一行，默认在上方会有操作栏，下面从左往右介绍这些按钮功能：</p>
+<ul class="simple">
+<li><p>Continue 继续执行，遇到下一个断点才会停下</p></li>
+<li><p>Step Over 单步执行，但不会进入子函数内部，而是直接执行完成个子函数</p></li>
+<li><p>Step Into 单步执行，如果遇到子函数，会进入子函数内部停下来</p></li>
+<li><p>Step Out  当使用 Step Into 进入子函数内部时，使用 Step Out 就可以完成子函数余下的部分，并返回上一层函数</p></li>
+<li><p>Restart 似乎不支持重启</p></li>
+<li><p>Stop 停止 gdb 调试，并终止 qemu</p></li>
+</ul>
 <p>你可以使用 Step Into 单步执行，并检查对应的寄存器变化，熟悉图形化调试的过程。</p>
 <p>如果你需要手动停止 qemu 模拟器，在对应的终端先按下 Ctrl + A，再按下 X 键，会退出 qemu 。</p>
 </section>
