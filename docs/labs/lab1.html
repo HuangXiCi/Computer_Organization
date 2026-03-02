@@ -52,16 +52,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#id3">1.2 为什么需要模拟器</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">2 获取代码框架</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">2.1 编译源文件</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">2.2 补充跳转指令</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">2.3 链接</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#gdb">3 GDB 图形化调试</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id8">4 汇编函数编写</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id9">4.1 等差数列求和</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id10">4.2 斐波那契数列求和</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vscode">2 vscode 准备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">3 分支及跳转指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abi">4 寄存器的ABI名称</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">5 本实验汇编程序代码框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gdb">6 GDB 图形化调试方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">7 任务：汇编程序编写</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">7.1 等差数列求和</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">7.2 斐波那契数列求和</a></li>
 </ul>
 </li>
 </ul>
@@ -113,22 +111,14 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 </section>
 <section id="id3">
 <h3>1.2 为什么需要模拟器<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>模拟器可以在不同的指令集架构、系统下面运行，
-不需要真实的硬件系统，使用起来非常方便。
-并且可以进行非常低层次的调试，可以随时调试程序，</p>
-<p>还能够简化部分的硬件操作，不用掌握所有部分的硬件细节（比如硬盘）。
-对于初学 RISC-V ，学习特权级、学习操作系统都是非常好的方式。</p>
+<p>模拟器使用起来非常灵活和方便：首先，模拟器可以在不同的指令集架构、系统上运行，不需要真实的硬件系统；其次，在模拟器中可以进行简单的调试，对程序进行debug；再者，模拟器中能够简化部分的硬件操作，不用掌握所有部件的硬件细节（比如硬盘）。
+因此，对于初学 RISC-V 以及学习特权级、操作系统等都是非常好的平台工具。</p>
 </section>
 </section>
-<section id="id4">
-<h2>2 获取代码框架<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<p>我们为大家准备了一个简易的框架代码，本次实验只需要在上面修改即可。</p>
-<p>git clone <a class="reference external" href="https://github.com/HuangXiCi/yonex.git">https://github.com/HuangXiCi/yonex.git</a></p>
-<p>在代码仓库 yonex 的 Makefile 框架里面已经给出了如何编译程序和启动qemu，
-我们有很多配置参数，从上往下主要分为以下几个部分。</p>
-<p>在 Ubuntu 上安装 vscode ，可以在 vscode 官网下载 .deb 安装包，然后使用 sudo dpkg -i 包名.deb 进行安装。
-在 vscode 的设置中，搜索 Debug ，勾选上 <code class="docutils literal notranslate"><span class="pre">Debug:</span> <span class="pre">Allow</span> <span class="pre">Breakpoints</span> <span class="pre">Everywhere</span></code> ，允许在任何文件中打断点，
-这样就可以在汇编源文件中打断点调试。</p>
+<section id="vscode">
+<h2>2 vscode 准备<a class="headerlink" href="#vscode" title="Link to this heading"></a></h2>
+<p>在 Ubuntu 上安装 vscode，可以在 vscode 官网下载 .deb 安装包，然后使用命令 &quot;sudo dpkg -i 包名.deb&quot; 进行安装。
+在 vscode 的设置中，搜索 Debug ，勾选上 <code class="docutils literal notranslate"><span class="pre">Debug:</span> <span class="pre">Allow</span> <span class="pre">Breakpoints</span> <span class="pre">Everywhere</span></code> ，允许在任何文件中打断点，这样就可以在汇编源文件中打断点进行调试。</p>
 <figure class="align-center">
 <img alt="Breakpoints" src="../_images/Breakpoints.png" />
 </figure>
@@ -136,114 +126,61 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 <figure class="align-center">
 <img alt="Extensions" src="../_images/Extensions.png" />
 </figure>
-<section id="id5">
-<h3>2.1 编译源文件<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<p>我们这次会编写汇编文件，如何将文件汇编为机器看得懂的二进制指令呢？
-我们将使用x86 Linux平台为riscv64编译裸机程序，需要使用交叉编译工具链。</p>
-<p>交叉编译是指使用一种平台的机器（如x86 Linux平台）编译另一种平台的机器（如RISC-V Linux平台）的程序，
-由于每个平台的差异很大，因此我们需要使用一套交叉编译工具链 riscv64-unknown-elf 工具链，目标是 riscv64 裸机平台。</p>
-<p>我们的框架代码内容不多，源文件在src目录下，有两个汇编源文件(.S)，boot.S和func.S，其中boot.S对 sp 寄存器初始化，
-然后通过 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">_func</span></code> 跳转到 func.S 中的 _func 函数， _func 函数是你需要完成的函数。</p>
-<p>gcc 可以根据文件后缀名自动判断如何处理文件，因此使用 riscv64-unknown-elf-gcc -c $(SRC) -o $(OBJ) 可以编译源文件。
-将汇编源文件(.S)汇编为可重定位文件(.o)，然后还需要进行链接操作，为我们的程序中可重定位的部分载入正确的地址。</p>
-<div class="admonition myhint">
-  <p class="admonition-title"> .S 和 .s 文件</p>
-  <p>.S 和 .s 文件都是指汇编文件，它们有什么区别？不知道就老老实实STFW。</p>
-</div></section>
-<section id="id6">
-<h3>2.2 补充跳转指令<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
-<p>risc-v 中拥有 jal 、jalr 和 branch 分支指令，前两个是无条件跳转，跳转的方式不同；
-而 branch 分支指令条件跳转，会对两个寄存器的值进行比较，满足条件才会跳转。
-这里使用伪代码给出这些指令的含义，下面还会提供一些例子演示如何使用这些指令。</p>
-<ul class="simple">
-<li><p>JAL 指令</p></li>
-</ul>
-<p>JAL 指令跳转相对于PC值进行偏移，支持20位符号扩展的立即数偏移，
-并且将下一条指令的地址写入目的地寄存器(rd)中。</p>
-<p>rd = pc + 4; pc = pc + imm;</p>
-<ul class="simple">
-<li><p>JALR 指令</p></li>
-</ul>
-<p>JALR 指令跳转相对源寄存器(rs1)进行偏移，支持12位符号扩展的立即数偏移，
-并且将下一条指令的地址写入目的地寄存器(rd)中。</p>
-<p>tmp = rs1; rd = pc + 4; pc = tmp + imm;</p>
-<p>这里引入 tmp 临时变量是为了保证源寄存器和目的地寄存器相同时指令含义的正确性。</p>
-<ul class="simple">
-<li><p>branch 条件分支指令</p></li>
-</ul>
-<p>risc-v有若干条条件分支指令，需要对两个源操作数进行比较，如果满足条件才会跳转。
-以beq指令为例，其含义是如果两个源操作数相等(Branch if Equal)时才进行跳转，支持13位符号扩展的立即数偏移。</p>
-<p>if (rs1 == rs2) pc = pc + imm;</p>
 </section>
-<section id="id7">
-<h3>2.3 链接<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
-<p>上面的跳转指令中提到，risc-v 拥有对当前 PC 值的相对跳转指令 jal 或者条件分支指令，我们称之为直接跳转；
-还有跳转到绝对地址的 jalr 跳转指令，通过寄存器值来进行跳转，我们称之为间接跳转。</p>
-<p>对于绝对跳转指令，我们必须要加载正确的地址，否则程序会运行不正确，
-而相对于 PC 值的直接跳转，则需要加载正确的偏移值。</p>
-<p>因此链接脚本就需要为程序指定位置，每个段应该放在哪里。</p>
-<p>在代码框架的linker目录下，有一个简单的链接脚本 linker.ld。</p>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">linker.ld</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> OUTPUT_ARCH(riscv)
-<span class="linenos"> 2</span> ENTRY(_start)
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span> SECTIONS
-<span class="linenos"> 5</span> {
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span>     . = 0x80000000,
-<span class="linenos"> 8</span>
-<span class="hll"><span class="linenos"> 9</span>     .text.boot : { *(.text.boot) }
-</span><span class="hll"><span class="linenos">10</span>     .text : { *(.text) }
-</span><span class="hll"><span class="linenos">11</span>     .data : { *(.data) }
-</span><span class="linenos">12</span> }
-</pre></div>
-</div>
-</div>
-<p>在两个源文件中，我们只定义了三个段 <code class="docutils literal notranslate"><span class="pre">.text.boot</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.text</span></code> 和 <code class="docutils literal notranslate"><span class="pre">.data</span></code> 段。
-它们按照这个顺序依次排放，并且 <code class="docutils literal notranslate"><span class="pre">.text.boot</span></code> 的起始地址是从 0x80000000 开始。</p>
-</section>
-</section>
-<section id="gdb">
-<h2>3 GDB 图形化调试<a class="headerlink" href="#gdb" title="Link to this heading"></a></h2>
-<p>我们的框架中给出了 vscode gdb 调试 qemu 的方法，并给出了launch.json，感兴趣可以自行研究。</p>
-<p>我们通过在代码框架目录下终端输入 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">gdb</span></code> 启动 qemu 等待调试</p>
+<section id="id4">
+<h2>3 分支及跳转指令<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>本实验可能涉及以下表格所示的RISC-V中的分支及跳转指令。其中 j 指令并不是与硬件直接对应的指令，而是一条为用户提供的一个便捷写法，称为伪指令，本实验中你可以直接用它进行无条件跳转。</p>
 <figure class="align-center">
-<img alt="start_gdb" src="../_images/start_gdb.png" />
+<img alt="branch_jump" src="../_images/branch_jump.png" />
 </figure>
-<p>我们可以先在任意一行打断点，然后在左侧 Run and Debug 中点击上方的绿色播放键开启 gdb 调试。
-此时gdb就会启动，qemu会运行停留在打断点的那行。</p>
-<figure class="align-center">
-<img alt="learn_gdb" src="../_images/learn_gdb.png" />
-</figure>
-<p>开启调试之后，左侧会出现调试信息，可以观察寄存器的值，这些寄存器都是使用的 ABI 名称。
-代码会运行停留在这一行，默认在上方会有操作栏，下面从左往右介绍这些按钮功能。</p>
-<ul class="simple">
-<li><p>Continue 继续执行，遇到下一个断点才会停下</p></li>
-<li><p>Step Over 单步执行，但不会进入子函数内部，而是直接执行完成个子函数</p></li>
-<li><p>Step Into 单步执行，如果遇到子函数，会进入子函数内部停下来</p></li>
-<li><p>Step Out  当使用 Step Into 进入子函数内部时，使用 Step Out 就可以完成子函数余下的部分，并返回上一层函数</p></li>
-<li><p>Restart 似乎不支持重启</p></li>
-<li><p>Stop 会停止 gdb 调试，并终止 qemu。</p></li>
-</ul>
-<p>你可以使用 Step Into 单步执行，并检查对应的寄存器变化，熟悉图形化调试的过程。</p>
-<p>如果你需要手动停止 qemu 模拟器，在对应的终端先按下 Ctrl + A，再按下 X 键，会退出 qemu 。</p>
 </section>
-<section id="id8">
-<h2>4 汇编函数编写<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
-<p>risc-v 通常有32个通用寄存器x0 ~ x31，这些寄存器都有对应的别名(ABI 名称)，
-在实际的汇编编程中，请使用别名，gdb调试时方便对应。</p>
+<section id="abi">
+<h2>4 寄存器的ABI名称<a class="headerlink" href="#abi" title="Link to this heading"></a></h2>
+<p>在 RISC-V 中，通常有32个通用寄存器x0 ~ x31。 ABI 名称（Application Binary Interface Name）是汇编代码和编译器中为通用寄存器定义的别名。相比于硬件名称 x0 到 x31，这些名称更能直观地反映寄存器在函数调用和程序运行中的约定用途。</p>
 <figure class="align-center">
 <img alt="gpr" src="../_images/gpr.png" />
 </figure>
-<p>在本次实验时，我们使用 a0 ~ a7 寄存器完成编程。</p>
-<section id="id9">
-<h3>4.1 等差数列求和<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+</section>
+<section id="id5">
+<h2>5 本实验汇编程序代码框架<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>我们已为大家准备了一个简易的框架代码，本次实验只需要在其中添加部分汇编语句即可。 使用以下命令将代码仓库克隆到本地：
+git clone <a class="reference external" href="https://github.com/HuangXiCi/yonex.git">https://github.com/HuangXiCi/yonex.git</a></p>
+<p>框架代码中源文件在src目录下，有两个汇编源文件(.S)，boot.S和func.S，其中boot.S对 sp 寄存器初始化，然后通过 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">_func</span></code> 跳转到 func.S 中的 _func 函数， _func 函数是你需要完成的函数。</p>
+<p>汇编代码完成后，如何将代码翻译成RISC-V架构的机器能看得懂的二进制指令呢？此处需要用到交叉编译工具链。交叉编译是指在一个平台上生成另一个平台可执行代码的过程。在我们的实验中，运行编译的平台是 x86 Linux(机房的计算机)，想让二进制指令运行其上的目标架构是 RISC-V。 因此我们需要使用一套交叉编译工具链 riscv64-unknown-elf 工具链。</p>
+<p>在 Makefile 中给出了编译、链接和启动qemu的流程，感兴趣可以深入探究。</p>
+</section>
+<section id="gdb">
+<h2>6 GDB 图形化调试方法<a class="headerlink" href="#gdb" title="Link to this heading"></a></h2>
+<p>我们的代码中给出了 vscode gdb 调试 qemu 的方法，以下进行简单说明。另外代码中也给出了用于配置调试器的文件 launch.json，感兴趣可以自行研究。</p>
+<p>Step1: 在代码目录 yonex 的终端输入 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">gdb</span></code> 启动 qemu 等待调试</p>
+<p>Step2: 在某一行打断点，然后在左侧 Run and Debug 中点击上方的绿色播放键开启 gdb 调试。 此时gdb就会启动，qemu会运行停留在打断点的那行。</p>
+<figure class="align-center">
+<img alt="start_gdb" src="../_images/start_gdb.png" />
+</figure>
+<p>Step3: 开启调试之后，左侧会出现调试信息，可以观察寄存器的值，这些寄存器都是使用的 ABI 名称。</p>
+<figure class="align-center">
+<img alt="learn_gdb" src="../_images/learn_gdb.png" />
+</figure>
+<p>代码会运行停留在这一行，默认在上方会有操作栏，下面从左往右介绍这些按钮功能：
+- Continue 继续执行，遇到下一个断点才会停下
+- Step Over 单步执行，但不会进入子函数内部，而是直接执行完成个子函数
+- Step Into 单步执行，如果遇到子函数，会进入子函数内部停下来
+- Step Out  当使用 Step Into 进入子函数内部时，使用 Step Out 就可以完成子函数余下的部分，并返回上一层函数
+- Restart 似乎不支持重启
+- Stop 停止 gdb 调试，并终止 qemu</p>
+<p>你可以使用 Step Into 单步执行，并检查对应的寄存器变化，熟悉图形化调试的过程。</p>
+<p>如果你需要手动停止 qemu 模拟器，在对应的终端先按下 Ctrl + A，再按下 X 键，会退出 qemu 。</p>
+</section>
+<section id="id6">
+<h2>7 任务：汇编程序编写<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<p>使用别名可以在gdb调试时方便查看对应寄存器的值，因此在本次实验中，我们使用 a0 ~ a7 寄存器完成编程。</p>
+<section id="id7">
+<h3>7.1 等差数列求和<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <p>等差数列求和需要3个参数，首项a0、公差d以及求前n项的和，
 为简化设计，我们可以将3个参数放置在三个寄存器中，比如a0, a1, a2寄存器中，然后使用笨办法通过循环语句进行求和。</p>
 <p>我们需要使用循环语句实现求和，下面给出了循环语句的 C 程序和汇编实现。</p>
-<div class="literal-block-wrapper docutils container" id="id12">
-<div class="code-block-caption"><span class="caption-text">c语言for循环示意</span><a class="headerlink" href="#id12" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">c语言for循环示意</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">2</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">// 省略一些操作</span>
 <span class="linenos">3</span><span class="w"> </span><span class="p">}</span>
@@ -251,8 +188,8 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">汇编语言for循环示意</span><a class="headerlink" href="#id13" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">汇编语言for循环示意</span><a class="headerlink" href="#id10" title="Link to this code"></a></div>
 <div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="nf">li</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">    </span><span class="c1">// int i = 0;</span>
 <span class="linenos">2</span><span class="w"> </span><span class="c1">// 假设 n 放在 a2 寄存器中</span>
 <span class="linenos">3</span><span class="w"> </span><span class="nl">.loop:</span>
@@ -278,8 +215,8 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
   结束循环后通过gdb调试检查寄存器的值，是否正确，如果不正确，可以通过单步调试，
   定位问题，最后将代码和截图放入实验报告。</p>
 </div></section>
-<section id="id10">
-<h3>4.2 斐波那契数列求和<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>7.2 斐波那契数列求和<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <div class="admonition myoption">
   <p class="admonition-title">等差数列求和</p>
   <p>按照求等差数列求和的方式，通过循环结构求斐波那契数列前n项和，
