@@ -29,12 +29,21 @@ QEMU有3种级别的模拟， **Full-system emulation** 、 **User-mode emulatio
 2 vscode 准备
 ~~~~~~~~~~~~~~~~~~~~~~
 
-在 Ubuntu 上安装 vscode，可以在 vscode 官网下载 .deb 安装包，然后使用命令 "sudo dpkg -i 包名.deb" 进行安装。
+在 Ubuntu 上安装 vscode，可以在 `vscode官网 <https://code.visualstudio.com/Download>`_ 找到并下载 .deb 安装包，然后使用命令 ``sudo dpkg -i 包名.deb`` 进行安装。
+
 在 vscode 的设置中，搜索 Debug ，勾选上 ``Debug: Allow Breakpoints Everywhere`` ，允许在任何文件中打断点，这样就可以在汇编源文件中打断点进行调试。
 
 .. figure:: ../picture/lab1/Breakpoints.png
    :alt: Breakpoints
    :align: center
+
+
+**一定要在vscode在扩展中安装 C/C++ Extensions Pack 扩展，用于支持 C/C++ 调试。**
+
+.. figure:: ../picture/lab1/C_C++.png
+   :alt: C_C++
+   :align: center
+
 
 在vscode在扩展中可以安装 RISC-V 扩展，即可对 risc-v 汇编文件语法高亮。
 
@@ -67,7 +76,8 @@ QEMU有3种级别的模拟， **Full-system emulation** 、 **User-mode emulatio
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 我们已为大家准备了一个简易的框架代码，本次实验只需要在其中添加部分汇编语句即可。 使用以下命令将代码仓库克隆到本地：
-git clone https://github.com/HuangXiCi/yonex.git
+
+``git clone https://github.com/HuangXiCi/yonex.git``
 
 框架代码中源文件在src目录下，有两个汇编源文件(.S)，boot.S和func.S，其中boot.S对 sp 寄存器初始化，然后通过 ``j _func`` 跳转到 func.S 中的 _func 函数， _func 函数是你需要完成的函数。
 
