@@ -182,7 +182,7 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 <p>使用别名可以在gdb调试时方便查看对应寄存器的值，因此在本次实验中，我们使用 a0 ~ a7 寄存器完成编程。</p>
 <section id="id8">
 <h3>7.1 等差数列求和<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<p>等差数列求和需要3个参数，首项a0、公差d以及求前n项的和，
+<p>等差数列求和需要3个参数，首项、公差d以及求前n项的和，
 为简化设计，我们可以将3个参数放置在三个寄存器中，比如a0, a1, a2寄存器中，然后使用笨办法通过循环语句进行求和。</p>
 <p>我们需要使用循环语句实现求和，下面给出了循环语句的 C 程序和汇编实现。</p>
 <div class="literal-block-wrapper docutils container" id="id10">
