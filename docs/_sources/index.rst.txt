@@ -19,6 +19,7 @@
    :hidden:
 
    实验一 汇编程序与调试 <labs/lab1>
+   实验二 ALU 设计 <labs/lab2>
    敬请期待 <labs/TODO.rst>
 
 
