@@ -55,7 +55,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#id5">1.4 比较置位</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">2 ALU 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">2 alu 实现</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">2.1 获取源码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">2.2 熟悉代码框架</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">2.3 加减法和比较置位</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">2.4 ALU 模块实现</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
@@ -93,19 +99,16 @@
 <section id="id1">
 <h2>1 ALU 的运算类型<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>ALU 是 CPU 数据通路中最基础、最关键的模块之一。
-它负责将输入的操作数执行特定的运算，然后输出。
-因此 ALU 的输出有两个或多个操作数，还有控制信号，用来指示运算类型，最后输出结果。</p>
-<p>实现的方式不难理解，将操作数输入到对应的运算模块，最后再从这个模块输出结果。
-我们会分析基础指令中需要实现的运算部件，其中很多都是数字逻辑实验中实现过的模块。</p>
-<p>本次实验我们实现 RV32I 中大部分运算模块。</p>
+它将两个或多个输入操作数进行指定的运算，如逻辑运算、移位、加减法等，最终将运算的结果输出。</p>
+<p>本次实验我们实现 RV32I 中涉及的大部分算术逻辑运算功能。</p>
 <section id="id2">
 <h3>1.1 与、或、异或<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>常见的逻辑运算有与或非、异或、同或。而 RV32I 中只有与、或、异或运算，
-在数字逻辑中我们知道，当一个操作数全为1时，按位异或运算相当于对另一个操作数按位进行取反操作。
-因此这些逻辑运算可以通过与、或、异或这三个运算得到。</p>
-<p>我们推荐每种运算都实现为一个独立的模块，如下代码所示。</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">运算模块示意</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<p>“与”、“或”、“异或”三种运算模块, 对应于 RV32I 中的 <code class="docutils literal notranslate"><span class="pre">and</span></code>、 <code class="docutils literal notranslate"><span class="pre">or</span></code>、 <code class="docutils literal notranslate"><span class="pre">xor</span></code> 指令实现。</p>
+<p>常见的逻辑运算有“与”、“或”、“非”、“异或”、“同或”，而 RV32I 中只用“与”、“或”、“异或”三种即可完成常见的逻辑运算。 回忆一下: 一个 1-bit 数的“非”可以通过将其与“1”异或来实现。</p>
+<p>推荐将每种运算都实现为一个独立的模块。代码的模块化有利于构建清晰的电路结构（模块加连线），
+并且在调试时可以快速定位到对应模块中的信号，而无需在一个复杂的模块中、从大量的信号中寻找需要观察的信号。如下代码给出了加法运算模块的示例，其他逻辑运算模块的实现方式类似。</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">运算模块示意</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="n">and32</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">out</span><span class="p">);</span>
 <span class="linenos">2</span>
 <span class="linenos">3</span><span class="w"> </span><span class="k">input</span><span class="w">   </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
@@ -118,64 +121,102 @@
 </pre></div>
 </div>
 </div>
-<p>上述是一个非常简单的模块，但是这样写代码，方便在调试的时候直接在对应的模块中查找信号的值，而不用在一个复杂的模块中，
-从大量的信号中找到你需要观察的信号。这样的电路就是模块加连线，电路结构非常清晰。</p>
-<p>以上三个模块实现了 <code class="docutils literal notranslate"><span class="pre">xor</span></code> 、 <code class="docutils literal notranslate"><span class="pre">or</span></code> 、 <code class="docutils literal notranslate"><span class="pre">and</span></code> 指令运算。</p>
 </section>
 <section id="id3">
 <h3>1.2 移位<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>我们需要实现左移、逻辑右移和算数右移运算。
-上学期的实验中我们已经实现了桶形移位器，能够单周期实现任意位的左移、逻辑右移和算数右移。
-这个模块需要输入待移位的数据 val，移位量 shamt，移位的类型 op，即可输出结果。
-其中 shamt 的位宽是 5bits 。</p>
-<p>这个模块实现了 <code class="docutils literal notranslate"><span class="pre">sll</span></code> 、 <code class="docutils literal notranslate"><span class="pre">srl</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sra</span></code> 指令运算。</p>
+<p>“左移”、“逻辑右移”、“算数右移”三种运算, 对应于 RV32I 中的 <code class="docutils literal notranslate"><span class="pre">sll</span></code> 、 <code class="docutils literal notranslate"><span class="pre">srl</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sra</span></code> 的指令实现。</p>
+<p>上学期的实验中已经实现了桶形移位器模块，能够单周期实现任意位的左移、逻辑右移和算数右移。
+需要的三个输入为：待移位的数据 val, 移位量 shamt (5 bits), 移位的类型 op。</p>
 </section>
 <section id="id4">
 <h3>1.3 加减法<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>加减法模块实现了 <code class="docutils literal notranslate"><span class="pre">add</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sub</span></code> 指令运算。</p>
 <div class="admonition mytodo">
   <p class="admonition-title">数的表示与加减法</p>
-  <p>数在计算机中的表示有无符号表示的数(unsigned)和有符号数(signed)，有符号数在计算机中都是使用补码(2的补码)表示，
-  而不是其他的表示方法，其中很重要的原因是补码表示的数很容易通过加法实现减法。当无符号数最高位为0时，其表示与补码表示相同；
-  而最高位为1时，无法用补码进行表示，为什么可以通过同样的方法实现减法运算？</p>
   <p>在加减法运算中，哪些情况会导致运算的结果不正确？请分别讨论有符号数运算和无符号数运算。
   以8位加减法为例，补码表示的有符号数范围是-128~127，
   当有符号数127和1进行加法时，得到的结果是-128，这显然是异常的结果。</p>
   <p><strong>这是必做的思考题，需要完成在实验报告中。</strong></p>
 </div><p>在 RISC-V 中并不会对加减法异常进行额外的处理，不会记录执行加减法过程中是否进位，可以在执行加减法前进行比较，防止结果产生异常的情况。
 因此加减法运算不需要关心进位输出位的情况。</p>
-<p>这个模块实现了 <code class="docutils literal notranslate"><span class="pre">add</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sub</span></code> 指令运算。</p>
 </section>
 <section id="id5">
 <h3>1.4 比较置位<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<p>加减法不需要区分有符号加减或者无符号加减，但是比较大小却需要区分有符号比较和无符号比较。
-比较大小是通过减法来实现的，因此我们需要对减法的结果进行讨论，而不是只关注进位输出位的情况。</p>
-<p>对于减法分类讨论，得到如下的情况。</p>
+<p>比较置位操作实现了 <code class="docutils literal notranslate"><span class="pre">slt</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sltu</span></code> 指令运算。</p>
+<ul class="simple">
+<li><p>slt 和 sltu</p></li>
+</ul>
+<p>用法： slt rd, rs1, rs2
+含义： rd = ((signed)rs1 &lt; (signed)rs2) ? 1 : 0</p>
+<p>用rs1和rs2进行有符号比较，如果rs1小于rs2则rd为1，否则为0</p>
+<p>sltu 则是进行无符号比较，如果rs1小于rs2则rd为1，否则为0</p>
+<p>比较大小操作是通过减法来实现的, 但不同的是: RISC-V中的加减法不区分操作数是有符号数还是无符号数, 但是“比较大小”的操作却需要区分清楚。
+因此我们需要对减法的结果进行分类讨论，如下图所示，其中 msb 为操作数的最高位。</p>
 <figure class="align-center">
 <img alt="compare" src="../_images/compare.png" />
 </figure>
-<p>对于补码表示的有符号数，其符号可以通过数的最高位(msb)进行判断；无符号数也需要对数的最高位(msb)进行判断。
-因此上面的表相当于真值表，可以对 lt (little than) 进行求值。</p>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">求 lt 示意</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
-<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="p">...</span>
-<span class="linenos">2</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">msb_xor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mh">31</span><span class="p">]</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="mh">31</span><span class="p">];</span><span class="w">     </span><span class="c1">// 对 a 和 b 的最高位进行异或</span>
-<span class="linenos">3</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">lt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">msb_xor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">cout</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">msb_xor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">is_unsigned</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">cout</span><span class="p">));</span>
-<span class="linenos">4</span><span class="w"> </span><span class="p">...</span>
-</pre></div>
-</div>
-</div>
-<p>因此在加减法器中输入是否为无符号数的信号 <code class="docutils literal notranslate"><span class="pre">is_unsigned</span></code> ，则可以得到 a 是否小于 b，
-则比较置位模块就非常简单，对加减法器的输出 lt 进行判断，若小于，则输出1，否则输出0。</p>
-<p>这个模块实现了 <code class="docutils literal notranslate"><span class="pre">slt</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sltu</span></code> 指令运算。</p>
+<dl class="simple">
+<dt>根据上图的逻辑, 可以对 lt (less than) 标志位进行求值, 输入为以下三个信息：</dt><dd><ol class="arabic simple">
+<li><p>操作数为有符号数还是无符号数</p></li>
+<li><p>操作数的最高位的值</p></li>
+<li><p>进位输出cout</p></li>
+</ol>
+</dd>
+</dl>
+<p>建议在比较置位模块中实例化加减法器模块来实现功能。如果在加减法器模块中求得 lt 的值，则比较置位模块的实现就非常简单：对加减法器的输出 lt 进行判断, 若 a 小于 b 则输出1, 否则输出0。</p>
 </section>
 </section>
 <section id="id6">
-<h2>2 ALU 输出<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
-<p>上面提到了若干个运算模块，我们的 ALU 需要根据操作码输出对应模块的结果，
+<h2>2 alu 实现<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>2.1 获取源码<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>获取本次实验的源码 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/yuweijie-20030124/suat-compution_organization.git</span></code></p>
+</section>
+<section id="id8">
+<h3>2.2 熟悉代码框架<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>本次实验只需要 RTL 编程和 vivado 仿真。有两个文件夹， <code class="docutils literal notranslate"><span class="pre">core</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">sim</span></code> ，其中 core 是一个残缺的 cpu 核，
+sim 是我们提供的仿真环境和测试样例代码。
+<strong>需要实现3个文件在 core 中</strong> ： alu_add.v 、 alu_sly.v 、 SUAT_alu.v 。
+我们的代码框架中已经提供了指令译码、写回等功能，你需要完善上面的三个模块，它们的端口信号已经给出，不能随意修改。</p>
+</section>
+<section id="id9">
+<h3>2.3 加减法和比较置位<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>加减法模块需要能够计算加法和减法，还要对有符号数和无符号数比较 (less than) 进行判断。
+我们已经给出了模块的端口信号，你需要根据上面的判别方法，输出 lt 信号。</p>
+<p>比较置位模块就很简单了，当 lt 信号为1，则输出 32'b1，否则输出 32'b0 。</p>
+</section>
+<section id="id10">
+<h3>2.4 ALU 模块实现<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<p>alu 里面需要将特定的控制信号输入到模块内部，还需要选择最终输出哪个模块的信号。</p>
+<p>上面提到的若干个运算模块，我们的 ALU 需要根据操作码输出对应模块的结果，
 因此就需要一个多输入的选择器，以及选择信号。</p>
 <p>在本实验中，为了统一实现，我们基于risc-v指令，规定好了操作码对应的 ALU 操作，
 当然这并非是最优秀的方式，在后续的 CPU 实验中，随着我们提供的仿真组件越来越少，
-你可以尝试更优秀的编码方式，但是在本实验中，不得更改。（否则你还要修改提供的 testbench）</p>
+你可以尝试更好的方式，但是在本实验中，不得更改。（否则你还要修改提供的 testbench 和框架代码）</p>
+<p>编码方式如下：</p>
+<ul class="simple">
+<li><p>op[1:0] : 给桶形移位器指示移位的类型，00表示左移，01表示逻辑右移，11表示算数右移</p></li>
+<li><p>op[2] : 若为1，则 alu 输出桶形移位器的结果</p></li>
+<li><p>op[3] : 若为1，则 alu 输出加法器的结果</p></li>
+<li><p>op[4] : 指示 is_unsigned 信号，1表示为无符号数，0表示为有符号数</p></li>
+<li><p>op[5] : 指示 is_sub 信号，1表示做减法，0表示做加法</p></li>
+<li><p>op[6] : 若为1，则 alu 输出相与的结果</p></li>
+<li><p>op[7] : 若为1，则 alu 输出相或的结果</p></li>
+<li><p>op[8] : 若为1，则 alu 输出相异或的结果</p></li>
+<li><p>op[9] : 若为1，则 alu 输出比较置位的结果</p></li>
+</ul>
+<p>在译码单元中，我们是保证了这些信号为一位热码（独热码），可以简化 alu 部分的译码复杂度。</p>
+<div class="admonition mytodo">
+  <p class="admonition-title">ALU 模块实现</p>
+  <p>完成三个需要完成的模块，ALU已经接入其他模块，并且这次我们提供了仿真环境和测试样例，
+  通过提供的所有测试样例，并截图放在实验报告中。</p>
+</div><p>vivado 的平台依然选择上学期的硬件平台，选择如下：</p>
+<figure class="align-center">
+<img alt="device" src="../_images/device.png" />
+</figure>
+<p>然后在设计文件中添加 <code class="docutils literal notranslate"><span class="pre">core</span></code> 中的所有文件， <strong>并且右键点击 define.v 将此文件 Set Global Include</strong> ，在仿真文件中添加 <code class="docutils literal notranslate"><span class="pre">sim</span></code> 中的 testbench 。
+仿真时，在终端会打印信息，需要全部通过所有测试样例。</p>
+</section>
 </section>
 </section>
 
