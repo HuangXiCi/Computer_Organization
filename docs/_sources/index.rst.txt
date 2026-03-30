@@ -20,6 +20,7 @@
 
    实验一 汇编程序与调试 <labs/lab1>
    实验二 ALU 设计 <labs/lab2>
+   实验三 处理器设计一 <labs/lab3>
    敬请期待 <labs/TODO.rst>
 
 
