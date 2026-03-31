@@ -103,7 +103,7 @@
 <section id="alu">
 <h3>1.1 修改ALU<a class="headerlink" href="#alu" title="Link to this heading"></a></h3>
 <p>准确来说是还需要扩充比较的类型，我们还需要比较两数是否相等，是否大于等于。
-两数是否相等在介绍异或门时有讲，如果忘记了可以去回顾一下这个部分内容。
+两数相等在介绍异或门时有讲，如果忘记了可以去回顾一下这个部分内容，不相等就是相等进行取反。
 大于等于其实和小于是互斥事件，所以只需要对小于取反，一个数不是小于，就一定大于等于另一个数。</p>
 <p>我们的ALU可以输出比较的结果，用于条件分支判断。</p>
 <div class="admonition myhint">
@@ -118,18 +118,23 @@
 </div><p>ALU 的模块框架我们也修改好了，你需要完成缺失的电路功能。</p>
 <div class="admonition mytodo">
   <p class="admonition-title">完善ALU</p>
-  <p>TODO</p>
+  <p>ALU需要能够输出两数的大小关系：小于、等于、不等于、大于等于。你需要将这些信号编码进行输出，
+  比如使用独热码（框架默认），这些信号在执行单元中用于条件跳转判断。</p>
 </div></section>
 <section id="id3">
 <h3>1.2 完成执行单元<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>执行单元多了一个地址加法器，多了一些操作数，多了一些控制信号，输出的目的地也多了一些。</p>
+<p>执行单元多了一个地址加法器，多了一些操作数，多了一些控制信号，输出的目的地也多了一些。
+执行单元需要发出跳转信号，需要对 ALU 的比较结果与分支跳转控制信号进行核验，
+如果满足要求，则会发出跳转信号；此外还有无条件跳转指令： <code class="docutils literal notranslate"><span class="pre">JAL</span></code> 和 <code class="docutils literal notranslate"><span class="pre">JALR</span></code> 两条指令，
+一定会发出跳转信号。地址加法器则完成跳转地址的计算。</p>
 <figure class="align-center">
 <img alt="exu" src="../_images/exu.png" />
 </figure>
 <p>这个执行单元就能够满足基础指令的需求，相比实验二几乎没有复杂多少。</p>
 <div class="admonition mytodo">
   <p class="admonition-title">完善执行单元</p>
-  <p>TODO</p>
+  <p>执行单元的代码框架已经给出，按照讲义的描述，执行单元有4个数据输入，
+  其中1和2是只输入给ALU，3和4只输入给地址加法器，用于简化执行单元的译码逻辑。</p>
 </div></section>
 </section>
 <section id="id4">
@@ -194,17 +199,27 @@ hint:type_branch</p>
 <p>我们的操作数有4个通道，则通道4为立即数的条件，如下代码所示：</p>
 <div class="literal-block-wrapper docutils container" id="id8">
 <div class="code-block-caption"><span class="caption-text">译码是否需要立即数</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
-<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">data4_imm</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">type_branch</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_jal</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_jalr</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_lui</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_auipc</span><span class="p">;</span>
+<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="n">data3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rs1_data</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">inst_jalr</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">pc</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">type_branch</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_auipc</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_jal</span><span class="p">}};</span>
 </pre></div>
 </div>
 </div>
-<p>也就是说，如果是分支跳转指令(branch)，或者是上面4条指令，则操作数4为立即数。</p>
+<p>也就是说，对于数据通道3来说，当指令为 <code class="docutils literal notranslate"><span class="pre">JALR</span></code> 时为 X[rs1]；
+当指令为条件分支指令、 <code class="docutils literal notranslate"><span class="pre">AUIPC</span></code> 指令和 <code class="docutils literal notranslate"><span class="pre">JAL</span></code> 指令时为 PC 值。</p>
 <p>你需要清晰的掌握数据的流向，由你设计操作数应该流向哪个运算部件，最后送回哪里。
 这就是译码单元需要完成的工作，解析指令，然后精准地发送控制信号，使得数据通路完成指令的功能。</p>
 <div class="admonition mytodo">
   <p class="admonition-title">完善译码单元</p>
-  <p>TODO</p>
-</div></section>
+  <p>完善译码单元，发出控制信号配合执行单元，完成以下表格的指令数据通路控制；
+  发出控制信号，配合执行单元完成跳转信号的控制，实现非条件跳转和条件跳转；
+  最后控制信号还需要对ALU和地址加法器的输出进行控制，输出到合适的路径：目的地寄存器或者PC寄存器。</p>
+</div><figure class="align-center">
+<img alt="instr1" src="../_images/instr1.png" />
+</figure>
+<p>本次实验能够实现以上指令的数据通路，包括实验二中实现的 ALU ，能够实现如下表格的运算指令。</p>
+<figure class="align-center">
+<img alt="instr2" src="../_images/instr2.png" />
+</figure>
+</section>
 </section>
 </section>
 
