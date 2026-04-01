@@ -41,7 +41,7 @@ AUIPC 是 Add Upper IMM 和 PC 值，存入到 rd 中。使用伪码解释如下
 2 执行单元
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: ../picture/lab3/框图.png
+.. figure:: ../picture/lab3/框图.jpg
    :alt: 框图
    :align: center
 
