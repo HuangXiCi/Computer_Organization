@@ -208,7 +208,7 @@ hint:type_branch</p>
 <p>通过指令的类型选择立即数的类型，如果是 I 型立即数类型的指令，则最后的立即数为 I 型立即数。</p>
 <p>我们的操作数有4个通道，则通道4为立即数的条件，如下代码所示：</p>
 <div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">译码是否需要立即数</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">译码通道3的数据来源</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="n">data3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rs1_data</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">inst_jalr</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">pc</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">type_branch</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_auipc</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_jal</span><span class="p">}};</span>
 </pre></div>
 </div>

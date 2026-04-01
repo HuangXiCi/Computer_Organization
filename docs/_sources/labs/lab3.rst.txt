@@ -163,7 +163,7 @@ hint:type_branch
 我们的操作数有4个通道，则通道4为立即数的条件，如下代码所示：
 
 .. code-block:: v
-   :caption: 译码是否需要立即数
+   :caption: 译码通道3的数据来源
    :linenos:
 
     data3 = rs1_data & {32{inst_jalr}} | pc & {32{type_branch | inst_auipc | inst_jal}};
