@@ -195,7 +195,7 @@ hint:type_branch
      <p class="admonition-title">通过指令测试</p>
      <p>我们和实验二一样，提供了指令测试，可以让你找到你出错的第一条指令。
      找到出错的指令之后，应该分析数据通路，究竟是框图中哪部分译码有问题，或者说指令的理解有偏差。
-     https://luplab.gitlab.io/rvcodecjs/#q=001d0d13&abi=false&isa=AUTO 在这个网站可以进行反汇编操作，
+     在 <a class="reference external" href="https://luplab.gitlab.io/rvcodecjs/#q=001d0d13&abi=false&isa=AUTO">这个网站</a> 可以进行反汇编操作，
      找到出错的第一条指令，进行反汇编，得知指令后按照框图检查数据通路。</p>
    </div>
 
