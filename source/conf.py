@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = '深圳理工大学-计算机组成原理-实验课程'
-copyright = '2026, 陈奕含，黄夕祠，余伟杰'
+copyright = '2026, 陈奕含，黄夕祠，余伟杰，李一庚'
 author = '深圳理工大学'
 release = '0.1'
 
