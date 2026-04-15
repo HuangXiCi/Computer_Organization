@@ -249,6 +249,14 @@
 <p>完成了所有模块的设计和实现之后，我们就可以进行仿真测试了。
 我们提供了一个测试程序，测试程序中包含了各种类型的指令，
 能够覆盖我们实现的所有指令功能，我们需要知道如何通过它来测试我们设计的处理器。</p>
+<div class="admonition mydanger">
+  <p class="admonition-title">修改Testbench里的文件路径</p>
+  <p>如下图所示，你需要修改Testbench里的文件路径，将这些路径都修改为正确的绝对路径。
+  使用相对路径的话，相对路径是相对于 Vivado 的工作目录，因此你创建 Vivado 工程的目录不同，
+  相对路径也会不一样，因此建议只使用绝对路径。</p>
+</div><figure class="align-center">
+<img alt="文件路径" src="../_images/%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84.png" />
+</figure>
 <div class="admonition myhint">
   <p class="admonition-title">通过指令测试2</p>
   <p>在我们运行 vivado 仿真时，默认是只会运行1000ns，

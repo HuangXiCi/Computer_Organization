@@ -207,6 +207,22 @@ LSU 模块完成的功能为：
 我们提供了一个测试程序，测试程序中包含了各种类型的指令，
 能够覆盖我们实现的所有指令功能，我们需要知道如何通过它来测试我们设计的处理器。
 
+
+.. raw:: html
+
+   <div class="admonition mydanger">
+     <p class="admonition-title">修改Testbench里的文件路径</p>
+     <p>如下图所示，你需要修改Testbench里的文件路径，将这些路径都修改为正确的绝对路径。
+     使用相对路径的话，相对路径是相对于 Vivado 的工作目录，因此你创建 Vivado 工程的目录不同，
+     相对路径也会不一样，因此建议只使用绝对路径。</p>
+   </div>
+
+
+.. figure:: ../picture/lab4/文件路径.png
+   :alt: 文件路径
+   :align: center
+
+
 .. raw:: html
 
    <div class="admonition myhint">
