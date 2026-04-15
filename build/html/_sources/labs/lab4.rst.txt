@@ -126,7 +126,7 @@ lw 和 sw 指令是访问存储器的4个字节，对于我们的简易存储器
 
 下图展示了几条访存指令的含义：
 
-.. figure:: ../picture/lab4/指令.png
+.. figure:: ../picture/lab4/指令.jpg
    :alt: 指令
    :align: center
 
