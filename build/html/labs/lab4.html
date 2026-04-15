@@ -54,7 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#lbsblwsw">2 待实现的指令：lb、sb、lw、sw</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lsu">3 LSU 模块</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id3">4 完善处理器结构</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">3.1 仿真测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">4.1 仿真测试</a></li>
 </ul>
 </li>
 </ul>
@@ -157,7 +157,7 @@
   <p class="admonition-title">写掩码信号</p>
   <p>上面讲到的独立控制每个字节的写功能的信号我们称之为写掩码信号，
   假如存储器没有写掩码信号，存储器只能每次写入一个完整的字，
-  而不能单独写入字节。那如何实现对字节的操作呢？
+  而不能单独写入字节。那如何在不使用写掩码信号的情况下实现对字节的操作呢？
   是否能描述一种可行的办法。</p>
 </div></section>
 <section id="lbsblwsw">
@@ -245,7 +245,7 @@
   <p>根据讲义的描述，以及提供的结构框图，
   重点理解数据通路的部分，需要完善所有模块的代码实现。</p>
 </div><section id="id4">
-<h3>3.1 仿真测试<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<h3>4.1 仿真测试<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <p>完成了所有模块的设计和实现之后，我们就可以进行仿真测试了。
 我们提供了一个测试程序，测试程序中包含了各种类型的指令，
 能够覆盖我们实现的所有指令功能，我们需要知道如何通过它来测试我们设计的处理器。</p>
