@@ -8,16 +8,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>处理器设计一 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/translations.js?v=beaddf03"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
@@ -91,14 +91,14 @@
            <div itemprop="articleBody">
              
   <section id="id1">
-<h1>处理器设计一<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<h1>处理器设计一<a class="headerlink" href="#id1" title="链接到此标题。"></a></h1>
 <p>在上一次实验中，我们对上学期的数字逻辑实验做了简单的总结，完成了ALU的设计。
 实验二就提到过，ALU只能通过操作码对输入的数进行运算，距离我们的
 这次实验我们会基于之前的部分，完成整个处理器的其他部分设计。</p>
 <p>通过以下命令获取本次实验代码框架：
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/yuweijie-20030124/suat-compution_organization.git</span></code></p>
 <section id="id2">
-<h2>1 本实验要完成的指令<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h2>1 本实验要完成的指令<a class="headerlink" href="#id2" title="链接到此标题。"></a></h2>
 <p>从 RISC-V 的指令来看，我们完成的 ALU 还不能完成一些指令的功能，比如条件分支指令，
 它既需要使用比较器比较出两数的大小关系，还需要通过PC值和立即数计算出跳转的地址，
 因此本质上需要两个加法器，一个用来做比较，一个用来计算地址。</p>
@@ -121,13 +121,13 @@ AUIPC 是 Add Upper IMM 和 PC 值，存入到 rd 中。使用伪码解释如下
 </figure>
 </section>
 <section id="id3">
-<h2>2 执行单元<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h2>2 执行单元<a class="headerlink" href="#id3" title="链接到此标题。"></a></h2>
 <figure class="align-center">
 <img alt="框图" src="../_images/%E6%A1%86%E5%9B%BE.jpg" />
 </figure>
 <p>本实验我们需要完成框图中红色的部分。SNPC是 PC+4 ，即默认的下一条 PC 值。</p>
 <section id="alu">
-<h3>2.1 修改ALU<a class="headerlink" href="#alu" title="Link to this heading"></a></h3>
+<h3>2.1 修改ALU<a class="headerlink" href="#alu" title="链接到此标题。"></a></h3>
 <p>准确来说是还需要扩充比较的类型，我们需要比较两数是否相等，是否大于等于。
 两数相等在介绍异或门时有讲，如果忘记了可以去回顾一下这个部分内容，不相等就是对相等进行取反。
 大于等于其实和小于是互斥事件，所以只需要对小于取反，一个数不是小于，就一定大于等于另一个数。</p>
@@ -148,7 +148,7 @@ AUIPC 是 Add Upper IMM 和 PC 值，存入到 rd 中。使用伪码解释如下
   比如使用独热码（框架默认），这些信号会在执行单元中用于条件跳转判断。</p>
 </div></section>
 <section id="id4">
-<h3>2.2 完成执行单元<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<h3>2.2 完成执行单元<a class="headerlink" href="#id4" title="链接到此标题。"></a></h3>
 <p>执行单元多了一个地址加法器，也多了两个操作数，多了一些控制信号，输出的目的地也多了一些。
 执行单元需要发出跳转信号，需要对 ALU 的比较结果与分支跳转控制信号进行核验，
 如果满足要求，则会发出跳转信号；此外还有无条件跳转指令： <code class="docutils literal notranslate"><span class="pre">JAL</span></code> 和 <code class="docutils literal notranslate"><span class="pre">JALR</span></code> 两条指令，
@@ -167,7 +167,7 @@ AUIPC 是 Add Upper IMM 和 PC 值，存入到 rd 中。使用伪码解释如下
 </div></section>
 </section>
 <section id="id5">
-<h2>3 译码单元<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h2>3 译码单元<a class="headerlink" href="#id5" title="链接到此标题。"></a></h2>
 <p>执行单元的数据通路需要依赖译码单元的控制信号。</p>
 <p>以上面执行单元示意图为例，对于 <code class="docutils literal notranslate"><span class="pre">JALR</span></code> 指令，其指令格式与 I 型指令相同，因此数据可以经过上方 ALU 选择加法器的结果，输出到 PC 寄存器中。
 当然也可以通过下方的地址加法器，输出到 PC 寄存器中。通过地址加法器输出到 PC 寄存器是一个不错的想法，因为条件分支指令也是通过地址加法器输出到 PC 寄存器，
@@ -175,10 +175,10 @@ AUIPC 是 Add Upper IMM 和 PC 值，存入到 rd 中。使用伪码解释如下
 <p>对于其他指令，比如 <code class="docutils literal notranslate"><span class="pre">LUI</span></code> 指令，同样是可以经过上面的 ALU ，或者经过下面的地址加法器，这个就留给你来设计了。
 因此，在译码单元中就需要和执行单元配合起来，和实验二里面一样，你可以使用独热码来作为执行单元中的操作码，控制数据通路。</p>
 <section id="id6">
-<h3>3.1 熟悉译码单元<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<h3>3.1 熟悉译码单元<a class="headerlink" href="#id6" title="链接到此标题。"></a></h3>
 <p>以条件分支指令为例，我们已经帮你把指令译码出来了，如下代码所示。</p>
 <div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">条件分支指令译码</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">条件分支指令译码</span><a class="headerlink" href="#id7" title="链接到此段代码"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">inst_beq</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">type_branch</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">2</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">1</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">0</span><span class="p">]</span><span class="w">   </span><span class="p">;</span>
 <span class="linenos">2</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">inst_bne</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">type_branch</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">2</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">1</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w">  </span><span class="n">funct3</span><span class="p">[</span><span class="mh">0</span><span class="p">]</span><span class="w">   </span><span class="p">;</span>
 <span class="linenos">3</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">inst_blt</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">type_branch</span><span class="w"> </span><span class="o">&amp;</span><span class="w">  </span><span class="n">funct3</span><span class="p">[</span><span class="mh">2</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">1</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">funct3</span><span class="p">[</span><span class="mh">0</span><span class="p">]</span><span class="w">   </span><span class="p">;</span>
@@ -200,7 +200,7 @@ hint:type_branch</p>
 <p>在译码单元里面，还有很多需要译码的部分，比如哪些指令会用到立即数，源寄存器，PC值等。</p>
 <p>译码立即数的类型，如下代码所示：</p>
 <div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">译码是否需要立即数</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">译码是否需要立即数</span><a class="headerlink" href="#id8" title="链接到此段代码"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">imm</span><span class="p">;</span>
 <span class="linenos">2</span><span class="w"> </span><span class="k">assign</span><span class="w"> </span><span class="n">imm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_imm</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">i_imm_en</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">j_imm</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">j_imm_en</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span>
 <span class="linenos">3</span><span class="w">         </span><span class="n">u_imm</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">u_imm_en</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">s_imm</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">s_imm_en</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">b_imm</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">b_imm_en</span><span class="p">}};</span>
@@ -210,7 +210,7 @@ hint:type_branch</p>
 <p>通过指令的类型选择立即数的类型，如果是 I 型立即数类型的指令，则最后的立即数为 I 型立即数。</p>
 <p>我们的操作数有4个通道，则通道4为立即数的条件，如下代码所示：</p>
 <div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">译码通道3的数据来源</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">译码通道3的数据来源</span><a class="headerlink" href="#id9" title="链接到此段代码"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="n">data3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rs1_data</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">inst_jalr</span><span class="p">}}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">pc</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="mh">32</span><span class="p">{</span><span class="n">type_branch</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_auipc</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">inst_jal</span><span class="p">}};</span>
 </pre></div>
 </div>

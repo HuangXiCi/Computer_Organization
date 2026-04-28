@@ -8,16 +8,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>处理器设计二 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/translations.js?v=beaddf03"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
@@ -88,13 +88,13 @@
            <div itemprop="articleBody">
              
   <section id="id1">
-<h1>处理器设计二<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<h1>处理器设计二<a class="headerlink" href="#id1" title="链接到此标题。"></a></h1>
 <p>本次实验，我们会认识简单存储器，以及处理器如何与存储器之间进行数据交换。为此我们需要实现 load 和 store 指令，
 考虑到复杂度，本次实验我们只实现 <code class="docutils literal notranslate"><span class="pre">lb</span></code> , <code class="docutils literal notranslate"><span class="pre">lw</span></code> , <code class="docutils literal notranslate"><span class="pre">sb</span></code> , <code class="docutils literal notranslate"><span class="pre">sw</span></code> 指令，其余指令实现方式类似。</p>
 <p>通过以下命令获取本次实验代码框架：
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/yuweijie-20030124/suat-compution_organization.git</span></code></p>
 <section id="id2">
-<h2>1 简易存储器<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h2>1 简易存储器<a class="headerlink" href="#id2" title="链接到此标题。"></a></h2>
 <p>Verilog 语句 <code class="docutils literal notranslate"><span class="pre">reg</span> <span class="pre">[31:0]</span> <span class="pre">sram</span> <span class="pre">[1023:0]</span></code> 就能定义一个简易存储器，
 存储器的宽度为 32 bit ，深度为 1024 。也就是说存储器有 1024 个格子，每个格子能装一个32位的数据。</p>
 <p>存储器以字节 (byte) 为最小单位编址，而我们对给出的简易存储器进行了规定，规定以字 (word) 为最小单位进行读写。
@@ -109,7 +109,7 @@
 </figure>
 <p>简易存储器在代码框架的 <code class="docutils literal notranslate"><span class="pre">lab4/SUAT_sram.v</span></code> 中，亦如下所示：</p>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">SUAT_sram.v</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">SUAT_sram.v</span><a class="headerlink" href="#id5" title="链接到此段代码"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="n">SUAT_sram</span><span class="w"> </span><span class="p">#(</span>
 <span class="linenos"> 2</span><span class="w"> </span><span class="c1">// --------------------------------------------------------------------------</span>
 <span class="linenos"> 3</span><span class="w"> </span><span class="c1">// Parameters</span>
@@ -162,7 +162,7 @@
   是否能描述一种可行的办法。</p>
 </div></section>
 <section id="lbsblwsw">
-<h2>2 待实现的指令：lb、sb、lw、sw<a class="headerlink" href="#lbsblwsw" title="Link to this heading"></a></h2>
+<h2>2 待实现的指令：lb、sb、lw、sw<a class="headerlink" href="#lbsblwsw" title="链接到此标题。"></a></h2>
 <ul class="simple">
 <li><p><strong>lb 指令</strong></p></li>
 </ul>
@@ -198,7 +198,7 @@
 </figure>
 </section>
 <section id="lsu">
-<h2>3 LSU 模块<a class="headerlink" href="#lsu" title="Link to this heading"></a></h2>
+<h2>3 LSU 模块<a class="headerlink" href="#lsu" title="链接到此标题。"></a></h2>
 <p>LSU 模块完成的功能为：</p>
 <p>在 Load 操作时，从译码模块 idu 读入地址，并在此基础上计算好访存地址，输出给存储器；
 当数据从存储器读出以后，对数据进行处理，并将处理好的数据传给写回模块 wbu。</p>
@@ -206,7 +206,7 @@
 在读入的地址的基础上计算好访存地址、生成相应的掩码信号，然后连同数据一同输出给存储器。</p>
 <p>下面是代码框架中 LSU 模块的接口定义：</p>
 <div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">SUAT_lsu.v</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">SUAT_lsu.v</span><a class="headerlink" href="#id6" title="链接到此段代码"></a></div>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">  </span><span class="k">module</span><span class="w"> </span><span class="n">SUAT_lsu</span><span class="p">(</span>
 <span class="linenos"> 2</span><span class="w">    </span><span class="k">input</span><span class="w">   </span><span class="kt">wire</span><span class="w">    </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">addr</span>
 <span class="linenos"> 3</span><span class="w">    </span><span class="p">,</span><span class="k">input</span><span class="w">   </span><span class="kt">wire</span><span class="w">    </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">wdata_i</span>
@@ -229,7 +229,7 @@
   包括访存地址计算、数据读取和写入等功能。需要根据不同的指令类型实现相应的数据处理逻辑。</p>
 </div></section>
 <section id="id3">
-<h2>4 完善处理器结构<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h2>4 完善处理器结构<a class="headerlink" href="#id3" title="链接到此标题。"></a></h2>
 <p>在处理器代码中中，我们已经实现了简易的取指单元模块，这个取指单元连接了另一个简易存储器，仅用于存储指令。
 因此我们的处理器是一个哈佛结构的处理器，指令存储器和数据存储器是分开的。</p>
 <p>简易存储器使用 <code class="docutils literal notranslate"><span class="pre">readmemh</span></code> 函数在仿真开始时将指令加载到存储器中，
@@ -246,7 +246,7 @@
   <p>根据讲义的描述，以及提供的结构框图，
   重点理解数据通路的部分，需要完善所有模块的代码实现。</p>
 </div><section id="id4">
-<h3>4.1 仿真测试<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<h3>4.1 仿真测试<a class="headerlink" href="#id4" title="链接到此标题。"></a></h3>
 <p>完成了所有模块的设计和实现之后，我们就可以进行仿真测试了。
 我们提供了一个测试程序，测试程序中包含了各种类型的指令，
 能够覆盖我们实现的所有指令功能，我们需要知道如何通过它来测试我们设计的处理器。</p>

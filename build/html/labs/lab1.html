@@ -8,16 +8,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>实验一 汇编程序与调试 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/translations.js?v=beaddf03"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
@@ -96,13 +96,13 @@
            <div itemprop="articleBody">
              
   <section id="id1">
-<h1>实验一 汇编程序与调试<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<h1>实验一 汇编程序与调试<a class="headerlink" href="#id1" title="链接到此标题。"></a></h1>
 <p>本次实验使用QEMU模拟器模拟RISC-V计算机，熟悉和编写汇编语句，编写简单的等差数列求和程序。
 使用交叉编译工具链编译程序，在QEMU模拟器上运行并调试程序。</p>
 <section id="qemu">
-<h2>1 QEMU 模拟器<a class="headerlink" href="#qemu" title="Link to this heading"></a></h2>
+<h2>1 QEMU 模拟器<a class="headerlink" href="#qemu" title="链接到此标题。"></a></h2>
 <section id="id2">
-<h3>1.1 QEMU 模拟器是什么<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<h3>1.1 QEMU 模拟器是什么<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
 <p>QEMU (Quick Emulator) 是一个开源的机器模拟器和虚拟化软件，可以模拟x86、ARM、RISC-V、PowerPC等多种处理器架构。
 QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong>User-mode emulation</strong> 和 <strong>Virtualization</strong> 。</p>
 <ol class="arabic simple">
@@ -114,13 +114,13 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 使用 Full-system emulation 模拟 RISC-V 裸机环境，并且32位risc-v和64位risc-v对实验内容不会产生任何影响，因此使用 qemu-system-riscv64 模拟器。</p>
 </section>
 <section id="id3">
-<h3>1.2 为什么需要模拟器<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<h3>1.2 为什么需要模拟器<a class="headerlink" href="#id3" title="链接到此标题。"></a></h3>
 <p>模拟器使用起来非常灵活和方便：首先，模拟器可以在不同的指令集架构、系统上运行，不需要真实的硬件系统；其次，在模拟器中可以进行简单的调试，对程序进行debug；再者，模拟器中能够简化部分的硬件操作，不用掌握所有部件的硬件细节（比如硬盘）。
 因此，对于初学 RISC-V 以及学习特权级、操作系统等都是非常好的平台工具。</p>
 </section>
 </section>
 <section id="vscode">
-<h2>2 vscode 准备<a class="headerlink" href="#vscode" title="Link to this heading"></a></h2>
+<h2>2 vscode 准备<a class="headerlink" href="#vscode" title="链接到此标题。"></a></h2>
 <p>在 Ubuntu 上安装 vscode，可以在 <a class="reference external" href="https://code.visualstudio.com/Download">vscode官网</a> 找到并下载 .deb 安装包，然后使用命令 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">dpkg</span> <span class="pre">-i</span> <span class="pre">包名.deb</span></code> 进行安装。</p>
 <p>在 vscode 的设置中，搜索 Debug ，勾选上 <code class="docutils literal notranslate"><span class="pre">Debug:</span> <span class="pre">Allow</span> <span class="pre">Breakpoints</span> <span class="pre">Everywhere</span></code> ，允许在任何文件中打断点，这样就可以在汇编源文件中打断点进行调试。</p>
 <figure class="align-center">
@@ -136,21 +136,21 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 </figure>
 </section>
 <section id="id5">
-<h2>3 分支及跳转指令<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h2>3 分支及跳转指令<a class="headerlink" href="#id5" title="链接到此标题。"></a></h2>
 <p>本实验可能涉及以下表格所示的RISC-V中的分支及跳转指令。其中 j 指令并不是与硬件直接对应的指令，而是一条为用户提供的一个便捷写法，称为伪指令，本实验中你可以直接用它进行无条件跳转。</p>
 <figure class="align-center">
 <img alt="branch_jump" src="../_images/branch_jump.png" />
 </figure>
 </section>
 <section id="abi">
-<h2>4 寄存器的ABI名称<a class="headerlink" href="#abi" title="Link to this heading"></a></h2>
+<h2>4 寄存器的ABI名称<a class="headerlink" href="#abi" title="链接到此标题。"></a></h2>
 <p>在 RISC-V 中，通常有32个通用寄存器x0 ~ x31。 ABI 名称（Application Binary Interface Name）是汇编代码和编译器中为通用寄存器定义的别名。相比于硬件名称 x0 到 x31，这些名称更能直观地反映寄存器在函数调用和程序运行中的约定用途。</p>
 <figure class="align-center">
 <img alt="gpr" src="../_images/gpr.png" />
 </figure>
 </section>
 <section id="id6">
-<h2>5 本实验汇编程序代码框架<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h2>5 本实验汇编程序代码框架<a class="headerlink" href="#id6" title="链接到此标题。"></a></h2>
 <p>我们已为大家准备了一个简易的框架代码，本次实验只需要在其中添加部分汇编语句即可。 使用以下命令将代码仓库克隆到本地：</p>
 <p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/HuangXiCi/yonex.git</span></code></p>
 <p>框架代码中源文件在src目录下，有两个汇编源文件(.S)，boot.S和func.S，其中boot.S对 sp 寄存器初始化，然后通过 <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">_func</span></code> 跳转到 func.S 中的 _func 函数， _func 函数是你需要完成的函数。</p>
@@ -158,7 +158,7 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 <p>在 Makefile 中给出了编译、链接和启动qemu的流程，感兴趣可以深入探究。</p>
 </section>
 <section id="gdb">
-<h2>6 GDB 图形化调试方法<a class="headerlink" href="#gdb" title="Link to this heading"></a></h2>
+<h2>6 GDB 图形化调试方法<a class="headerlink" href="#gdb" title="链接到此标题。"></a></h2>
 <p>我们的代码中给出了 vscode gdb 调试 qemu 的方法，以下进行简单说明。另外代码中也给出了用于配置调试器的文件 launch.json，感兴趣可以自行研究。</p>
 <p>Step1: 在代码目录 yonex 的终端输入 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">gdb</span></code> 启动 qemu 等待调试</p>
 <p>Step2: 在某一行打断点，然后在左侧 Run and Debug 中点击上方的绿色播放键开启 gdb 调试。 此时gdb就会启动，qemu会运行停留在打断点的那行。</p>
@@ -182,15 +182,15 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 <p>如果你需要手动停止 qemu 模拟器，在对应的终端先按下 Ctrl + A，再按下 X 键，会退出 qemu 。</p>
 </section>
 <section id="id7">
-<h2>7 任务：汇编程序编写<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<h2>7 任务：汇编程序编写<a class="headerlink" href="#id7" title="链接到此标题。"></a></h2>
 <p>使用别名可以在gdb调试时方便查看对应寄存器的值，因此在本次实验中，我们使用 a0 ~ a7 寄存器完成编程。</p>
 <section id="id8">
-<h3>7.1 等差数列求和<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<h3>7.1 等差数列求和<a class="headerlink" href="#id8" title="链接到此标题。"></a></h3>
 <p>等差数列求和需要3个参数，首项、公差d以及求前n项的和，
 为简化设计，我们可以将3个参数放置在三个寄存器中，比如a0, a1, a2寄存器中，然后使用笨办法通过循环语句进行求和。</p>
 <p>我们需要使用循环语句实现求和，下面给出了循环语句的 C 程序和汇编实现。</p>
 <div class="literal-block-wrapper docutils container" id="id10">
-<div class="code-block-caption"><span class="caption-text">c语言for循环示意</span><a class="headerlink" href="#id10" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">c语言for循环示意</span><a class="headerlink" href="#id10" title="链接到此段代码"></a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">2</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="c1">// 省略一些操作</span>
 <span class="linenos">3</span><span class="w"> </span><span class="p">}</span>
@@ -199,7 +199,7 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">汇编语言for循环示意</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">汇编语言for循环示意</span><a class="headerlink" href="#id11" title="链接到此段代码"></a></div>
 <div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="nf">li</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">    </span><span class="c1">// int i = 0;</span>
 <span class="linenos">2</span><span class="w"> </span><span class="c1">// 假设 n 放在 a2 寄存器中</span>
 <span class="linenos">3</span><span class="w"> </span><span class="nl">.loop:</span>
@@ -226,7 +226,7 @@ QEMU有3种级别的模拟， <strong>Full-system emulation</strong> 、 <strong
   定位问题，最后将代码和截图放入实验报告。</p>
 </div></section>
 <section id="id9">
-<h3>7.2 斐波那契数列求和<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<h3>7.2 斐波那契数列求和<a class="headerlink" href="#id9" title="链接到此标题。"></a></h3>
 <div class="admonition myoption">
   <p class="admonition-title">等差数列求和</p>
   <p>按照求等差数列求和的方式，通过循环结构求斐波那契数列前n项和，
