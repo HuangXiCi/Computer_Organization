@@ -129,17 +129,13 @@
 </ol>
 <p>不同指令所需的阶段数量不同。
 例如普通算数运算指令不需要 MEM 阶段，而 <code class="docutils literal notranslate"><span class="pre">sw</span></code> 指令不需要 WB 阶段。</p>
-<div class="admonition myhint">
-  <p class="admonition-title">多周期处理器不是流水线处理器</p>
-  <p>多周期处理器虽然也把指令拆成 IF、ID、EX、MEM、WB 等阶段，
-  但它在同一时刻只执行一条指令。当前指令没有执行完成之前，下一条指令不会进入处理器执行。
-  因此本次实验不需要考虑流水线冒险、数据前递、流水线暂停等问题。</p>
-</div><p>不同类型指令所经历的阶段数不同。例如：</p>
+<p>因此不同类型指令所经历的阶段数不同。例如：</p>
 <ul class="simple">
 <li><p>普通算数运算指令通常经历 IF、ID、EX、WB；</p></li>
 <li><p>sw 指令通常经历 IF、ID、EX、MEM；</p></li>
 <li><p>lw 指令通常经历 IF、ID、EX、MEM、WB；</p></li>
 </ul>
+<p>当然你也可以每条指令都经历全部五个阶段，只不过在不需要的阶段不执行任何操作，这样设计会更简单一些。</p>
 <section id="id3">
 <h3>1.1 多周期处理器中的级间寄存器<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>在单周期处理器中，一条指令的所有组合逻辑都在一个周期内完成，中间结果不需要保存。
