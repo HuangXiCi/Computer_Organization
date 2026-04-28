@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>处理器设计三 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="There&#39;s nothing here" href="TODO.html" />
+    <link rel="prev" title="处理器设计二" href="lab4.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            深圳理工大学-计算机组成原理-实验课程
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">实验一 汇编程序与调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">实验二 ALU 设计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 处理器设计一</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">实验四 处理器设计二</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">实验五 处理器设计三</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1 从单周期到多周期</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">1.1 多周期处理器中的状态寄存器</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2 各阶段完成的功能</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#if">2.1 IF 阶段：取指</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id">2.2 ID 阶段：译码与读寄存器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ex">2.3 EX 阶段：执行运算或计算地址</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mem">2.4 MEM 阶段：访存</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">深圳理工大学-计算机组成原理-实验课程</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">处理器设计三</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/labs/lab5.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>处理器设计三<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本次实验中，我们将把前面已经实现的单周期处理器改造成多周期处理器。</p>
+<p>在单周期处理器中，一条指令必须在一个时钟周期内完成取指、译码、执行、访存和写回等所有操作。
+这会导致一个时钟周期必须足够长，能够覆盖最慢指令的数据通路延迟。
+例如 <code class="docutils literal notranslate"><span class="pre">lw</span></code> 指令需要经历取指、译码、地址计算、访存、写回寄存器等步骤，
+它通常会决定整个单周期处理器的最长关键路径。</p>
+<p>多周期处理器的基本思想是：<strong>将一条指令拆分成多个阶段执行，每个阶段占用一个时钟周期</strong>。
+这样可以缩短单个时钟周期的组合逻辑延迟，并且能够在不同阶段复用硬件资源，例如 ALU 可以既用于 PC + 4，
+也可以用于访存地址计算，还可以用于普通算术逻辑运算。</p>
+<p>需要注意的是，本次实验实现的是多周期处理器，而不是流水线处理器。
+多周期处理器在同一时刻仍然只处理一条指令，只是这条指令需要多个周期完成。
+流水线处理器则允许多条指令同时处于不同执行阶段，这不是本次实验的内容。</p>
+<p>通过以下命令获取本次实验代码框架：</p>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/yuweijie-20030124/suat-compution_organization.git</span></code></p>
+<section id="id2">
+<h2>1 从单周期到多周期<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>单周期处理器的特点是每条指令都在一个周期内完成。
+因此，不同类型指令虽然实际需要的功能不同，但它们都必须占用同样长的周期。</p>
+<p>例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">add</span></code> 指令只需要取指、译码、执行和写回；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sw</span></code> 指令需要取指、译码、计算地址和写存储器；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lw</span></code> 指令需要取指、译码、计算地址、读存储器和写回。</p></li>
+</ul>
+<p>在单周期处理器中，所有这些操作都被放在一个周期中完成，导致时钟周期由最慢的指令决定。</p>
+<p>多周期处理器会把指令执行过程拆成若干阶段：</p>
+<ol class="arabic simple">
+<li><p>IF：Instruction Fetch，取指；</p></li>
+<li><p>ID：Instruction Decode，译码并读取寄存器；</p></li>
+<li><p>EX：Execute，执行运算或计算地址；</p></li>
+<li><p>MEM：Memory Access，访存；</p></li>
+<li><p>WB：Write Back，写回。</p></li>
+</ol>
+<p>不同指令所需的阶段数量不同。
+例如普通 ALU 指令不需要 MEM 阶段，而 <code class="docutils literal notranslate"><span class="pre">sw</span></code> 指令不需要 WB 阶段。</p>
+<div class="admonition myhint">
+  <p class="admonition-title">多周期处理器不是流水线处理器</p>
+  <p>多周期处理器虽然也把指令拆成 IF、ID、EX、MEM、WB 等阶段，
+  但它在同一时刻只执行一条指令。当前指令没有执行完成之前，下一条指令不会进入处理器。
+  因此本次实验不需要考虑流水线冒险、数据前递、流水线暂停等问题。</p>
+</div><section id="id3">
+<h3>1.1 多周期处理器中的状态寄存器<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>在单周期处理器中，一条指令的所有组合逻辑都在一个周期内完成，中间结果不需要保存。
+而在多周期处理器中，一条指令会跨越多个时钟周期执行，因此我们必须在阶段之间保存中间结果。</p>
+<p>这些寄存器的作用是把单周期处理器中的长组合逻辑路径切分成多段。
+每个阶段只完成其中一部分工作，并把结果保存到寄存器中，供后续阶段使用。</p>
+<p>例如 <code class="docutils literal notranslate"><span class="pre">lw</span> <span class="pre">rd,</span> <span class="pre">imm(rs1)</span></code> 指令可以被拆分为：</p>
+<ol class="arabic simple">
+<li><p>IF 阶段：根据 <code class="docutils literal notranslate"><span class="pre">PC</span></code> 读取指令，并计算 <code class="docutils literal notranslate"><span class="pre">PC</span> <span class="pre">+</span> <span class="pre">4</span></code>；</p></li>
+<li><p>ID 阶段：译码指令，读取 <code class="docutils literal notranslate"><span class="pre">rs1</span></code>；</p></li>
+<li><p>EX 阶段：计算访存地址 <code class="docutils literal notranslate"><span class="pre">rs1</span> <span class="pre">+</span> <span class="pre">imm</span></code>，结果保存到 <code class="docutils literal notranslate"><span class="pre">ALUOut</span></code>；</p></li>
+<li><p>MEM 阶段：使用 <code class="docutils literal notranslate"><span class="pre">ALUOut</span></code> 访问数据存储器；</p></li>
+<li><p>WB 阶段：将读出的数据写回 <code class="docutils literal notranslate"><span class="pre">rd</span></code>。</p></li>
+</ol>
+</section>
+</section>
+<section id="id4">
+<h2>2 各阶段完成的功能<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="if">
+<h3>2.1 IF 阶段：取指<a class="headerlink" href="#if" title="Link to this heading"></a></h3>
+<p>IF 阶段负责从指令存储器中读取指令，并计算下一条顺序指令地址 <code class="docutils literal notranslate"><span class="pre">PC</span> <span class="pre">+</span> <span class="pre">4</span></code>。</p>
+<p>在 IF 阶段需要完成：</p>
+<ul class="simple">
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">PC</span></code> 访问指令存储器；</p></li>
+<li><p>计算 <code class="docutils literal notranslate"><span class="pre">PC</span> <span class="pre">+</span> <span class="pre">4</span></code>；</p></li>
+<li><p>默认情况下，PC 准备更新为 <code class="docutils literal notranslate"><span class="pre">PC</span> <span class="pre">+</span> <span class="pre">4</span></code>。</p></li>
+</ul>
+<p>需要注意的是，在多周期处理器中，PC 不能像单周期处理器那样每个周期都自动加 4。
+PC 只有在合适的阶段才能更新。
+例如：</p>
+<ul class="simple">
+<li><p>普通顺序执行指令可以在 IF 阶段就更新 PC；</p></li>
+<li><p>branch 指令要在 EX 阶段根据比较结果或跳转条件决定是否更新 PC；</p></li>
+<li><p>jal、jalr 指令计算出跳转目标地址后需要更新 PC。</p></li>
+</ul>
+<p>一种较简单的设计方式是：</p>
+<ul class="simple">
+<li><p>在 IF 阶段将 PC 送出取指之后，默认更新 PC 为 PC + 4；</p></li>
+<li><p>到 EX 阶段如果发现是跳转或分支指令，再改写 PC；</p></li>
+</ul>
+<div class="admonition myhint">
+  <p class="admonition-title">PC 什么时候更新？</p>
+  <p>本实验不强制规定 PC 的具体更新时机。
+  你可以选择在 IF 阶段就将 PC 更新为 PC + 4，
+  也可以选择在指令完成后再更新 PC。
+  但无论采用哪种设计，都必须保证 branch、jal、jalr 等控制流指令能够正确修改 PC。</p>
+</div></section>
+<section id="id">
+<h3>2.2 ID 阶段：译码与读寄存器<a class="headerlink" href="#id" title="Link to this heading"></a></h3>
+<p>在单周期处理器中，译码单元的输出会直接连接到执行单元。
+而在多周期处理器中，由于 EX 阶段在下一个周期才会执行，因此需要把这些结果保存下来。</p>
+</section>
+<section id="ex">
+<h3>2.3 EX 阶段：执行运算或计算地址<a class="headerlink" href="#ex" title="Link to this heading"></a></h3>
+<p>EX 阶段负责使用 ALU 和地址加法器完成指令的核心计算。
+目前我们的所有运算指令都是可以在一个周期内完成的，因此 ALU 的输入和输出都可以直接连接到 EX 阶段的寄存器。</p>
+<p>我们在执行 Load/Store 指令时，我们可以尝试跳过 MEM 阶段，直接进行写回阶段。</p>
+<div class="admonition myhint">
+  <p class="admonition-title">如何跳过 MEM 阶段</p>
+  <p>本实验不强制规定 PC 的具体更新时机。
+  你可以选择在 IF 阶段就将 PC 更新为 PC + 4，
+  也可以选择在指令完成后再更新 PC。
+  但无论采用哪种设计，都必须保证 branch、jal、jalr 等控制流指令能够正确修改 PC。</p>
+</div></section>
+<section id="mem">
+<h3>2.4 MEM 阶段：访存<a class="headerlink" href="#mem" title="Link to this heading"></a></h3>
+<p>MEM 阶段负责处理 load/store 指令。
+在多周期处理器中，LSU 的基本功能不需要改变，</p>
+<div class="admonition myquestion">
+  <p class="admonition-title">思考题</p>
+  <p>多周期处理器缩短了单个时钟周期，但一条指令需要多个周期才能完成。
+  那么多周期处理器一定比单周期处理器快吗？
+  请从时钟周期长度和 CPI 两个角度进行分析。</p>
+</div></section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="lab4.html" class="btn btn-neutral float-left" title="处理器设计二" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="TODO.html" class="btn btn-neutral float-right" title="There&#39;s nothing here" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2026, 陈奕含，黄夕祠，余伟杰，李一庚。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

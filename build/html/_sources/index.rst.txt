@@ -22,6 +22,7 @@
    实验二 ALU 设计 <labs/lab2>
    实验三 处理器设计一 <labs/lab3>
    实验四 处理器设计二 <labs/lab4>
+   实验五 处理器设计三 <labs/lab5>
    敬请期待 <labs/TODO.rst>
 
 
