@@ -187,6 +187,12 @@ DATA SRAM 用于存放 <code class="docutils literal notranslate"><span class="p
 地址解码器简单的通过访存地址的高16位进行判断，你实际需要访问哪个设备，
 然后将控制信号选通发到对应的设备，其余的设备则是无效的控制信号（置为0）。
 设备则只需要拿到访存地址的低16位，以及对应的控制信号。</p>
+<p>因此地址译码器需要拿到高16位地址(addr_i)，以及控制信号，然后通过高16位地址决定发送给谁。</p>
+<p>这里对信号名做出解释,以此类推：</p>
+<ul class="simple">
+<li><p>c2dmem 代表 core to dmem ，即CPU给dmem的信号</p></li>
+<li><p>dmem2c 代表 dmem to core ，即dmem给CPU的信号</p></li>
+</ul>
 <p>如下面代码所示：</p>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="k">assign</span><span class="w"> </span><span class="n">c2dmem_wren_o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">addr_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">16&#39;h8001</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">wren_i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mh">4</span><span class="mb">&#39;b0</span><span class="p">;</span>
 <span class="k">assign</span><span class="w"> </span><span class="n">c2uart_wren_o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">addr_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">16&#39;h1000</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">wren_i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mh">4</span><span class="mb">&#39;b0</span><span class="p">;</span>
@@ -303,10 +309,14 @@ UART协议是异步的，意味着它不需要时钟信号来同步发送和接�
 <section id="id11">
 <h2>4 简易处理器结构<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
 <p>至此，整个处理器的硬件设计基本完成，下面是整个处理器的结构示意图：</p>
+<figure class="align-center">
+<img alt="结构示意图" src="../_images/%E7%BB%93%E6%9E%84%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" />
+</figure>
 <div class="admonition mytodo">
   <p class="admonition-title">处理器通过仿真测试</p>
   <p>我们在代码框架中给大家准备了testbench.sv用于测试你的处理器现在功能是否正常，
   由于修改了访存部分的设计，所以如果实现不正确的话，访存行为很可能不正确，比如读写控制信号没法正确传递。
+  在testbench的开头需要修改为你实际的lab6的文件路径。
   运行仿真测试，通过报错信息和仿真波形修改实现，直到通过所有的指令测试。</p>
 </div></section>
 </section>
