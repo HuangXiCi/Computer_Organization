@@ -103,7 +103,7 @@
 本次实验将带领大家把设计综合为真实的硬件电路，下载到 FPGA 开发板上运行，让你的处理器&quot;活&quot;起来。
 通过这次实验，你能感受到计算机与真实物理世界是如何互动的，了解如何通过串口使键盘与计算机进行交互。</p>
 <p>通过以下命令获取本次实验代码框架：</p>
-<p><code class="docutils literal notranslate"><span class="pre">https://github.com/HuangXiCi/yonex</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/HuangXiCi/yonex</span></code></p>
 <section id="fpga">
 <h2>1 处理器 FPGA 实现<a class="headerlink" href="#fpga" title="Link to this heading"></a></h2>
 <section id="id2">
@@ -181,7 +181,7 @@
 <p><strong>在Windows上，可以使用 MobaXterm 连接串口。</strong>
 选择正确的端口和波特率，即可连接串口。</p>
 <figure class="align-center">
-<img alt="MobaXetrm" src="../_images/MobaXterm.png" />
+<img alt="MobaXterm" src="../_images/MobaXterm.png" />
 </figure>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -189,7 +189,30 @@
 <p><strong>在 Ubuntu 下</strong>，可以 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">minicom</span></code> 安装 minicom。
 使用 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">minicom</span> <span class="pre">-s</span></code> 打开 minicom ，查看设备 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span> <span class="pre">/dev/ttyUSB*</span></code> ，
 在 minicom 里面选择对应设备和波特率，即可连接串口。</p>
-<p>如果你的串口实现正确，那你应该可以看到串口输出信息显示在你的屏幕上。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/minicom1.png"><img alt="minicom1" src="../_images/minicom1.png" style="width: 297.75px; height: 273.75px;" />
+</a>
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>进入minicom后，选择配置串口，设置正确的串口设备和波特率。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/minicom2.png"><img alt="minicom2" src="../_images/minicom2.png" style="width: 626.25px; height: 364.5px;" />
+</a>
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>最后选择退出，就可以连接串口了。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/minicom3.png"><img alt="minicom3" src="../_images/minicom3.png" style="width: 249.0px; height: 249.75px;" />
+</a>
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>如果你的串口实现和连接正确，那你应该可以看到串口输出信息显示在你的屏幕上。</p>
 <section id="id5">
 <h3>2.1 第一个程序<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <p>我们在代码框架中为你准备了一个简单的程序，运行后会在串口输出 Hello SUAT ，并且等待用户输入，

@@ -10,7 +10,7 @@
 
 通过以下命令获取本次实验代码框架：
 
-``https://github.com/HuangXiCi/yonex``
+``git clone https://github.com/HuangXiCi/yonex``
 
 1 处理器 FPGA 实现
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -121,7 +121,7 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 选择正确的端口和波特率，即可连接串口。
 
 .. figure:: ../picture/lab7/MobaXterm.png
-   :alt: MobaXetrm
+   :alt: MobaXterm
    :align: center
 
 |
@@ -130,7 +130,32 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 使用 ``sudo minicom -s`` 打开 minicom ，查看设备 ``ls -l /dev/ttyUSB*`` ，
 在 minicom 里面选择对应设备和波特率，即可连接串口。
 
-如果你的串口实现正确，那你应该可以看到串口输出信息显示在你的屏幕上。
+.. figure:: ../picture/lab7/minicom1.png
+   :alt: minicom1
+   :align: center
+   :scale: 75%
+
+|
+
+进入minicom后，选择配置串口，设置正确的串口设备和波特率。
+
+.. figure:: ../picture/lab7/minicom2.png
+   :alt: minicom2
+   :align: center
+   :scale: 75%
+
+|
+
+最后选择退出，就可以连接串口了。
+
+.. figure:: ../picture/lab7/minicom3.png
+   :alt: minicom3
+   :align: center
+   :scale: 75%
+
+|
+
+如果你的串口实现和连接正确，那你应该可以看到串口输出信息显示在你的屏幕上。
 
 2.1 第一个程序
 -------------------------------------------
