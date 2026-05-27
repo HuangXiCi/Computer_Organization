@@ -236,8 +236,8 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 
    <div class="admonition myoption">
      <p class="admonition-title">旋转甜甜圈donut</p>
-     <p>如果你对这段代码，其背后的原理感兴趣，在互联网上搜索STFW，
-     信息还是很多的，你可以用几十行动手实现一个python的版本，每秒几十帧画面的效果会好很多，
+     <p>如果你对这段代码，其背后的原理感兴趣，在互联网上搜索donut的原理，
+     你可以动手实现一个python的版本，每秒几十帧画面的效果会好很多，
      就像 GIF 图那样。</p>
    </div>
 
