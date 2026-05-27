@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>运行简易程序 &mdash; 深圳理工大学-计算机组成原理-实验课程 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="There&#39;s nothing here" href="TODO.html" />
+    <link rel="prev" title="简易串口设计" href="lab6.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            深圳理工大学-计算机组成原理-实验课程
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">实验一 汇编程序与调试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">实验二 ALU 设计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 处理器设计一</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">实验四 处理器设计二</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab5.html">实验五 处理器设计三</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab6.html">实验六 简单串口设计</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">实验七 运行简易程序</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fpga">1 处理器 FPGA 实现</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1 部分模块修改</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pll">1.2 添加 PLL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">1.3 添加顶层文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2 运行简易程序</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">2.1 第一个程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">2.2 谁不想拥有一只绝世好猫</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">2.3 2048小游戏</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">2.4 旋转甜甜圈</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">深圳理工大学-计算机组成原理-实验课程</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">运行简易程序</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/labs/lab7.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>运行简易程序<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>经过前面六个实验的努力，我们已经从零开始，逐步理解并完成了一个功能较完整的 RV32I 多周期处理器：
+它能够执行算术运算、逻辑运算、分支跳转、访存等指令，还具备 UART 串口外设，可以通过 MMIO 与外部世界进行输入输出。</p>
+<p>但是到目前为止，我们的处理器还只存在于仿真环境中。
+本次实验将带领大家把设计综合为真实的硬件电路，下载到 FPGA 开发板上运行，让你的处理器&quot;活&quot;起来。
+通过这次实验，你能感受到计算机与真实物理世界是如何互动的，了解如何通过串口使键盘与计算机进行交互。</p>
+<p>通过以下命令获取本次实验代码框架：</p>
+<p><code class="docutils literal notranslate"><span class="pre">https://github.com/HuangXiCi/yonex</span></code></p>
+<section id="fpga">
+<h2>1 处理器 FPGA 实现<a class="headerlink" href="#fpga" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>1.1 部分模块修改<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>由于 FPGA 板的限制，需要减小存储器大小，在 SUAT_top.v 文件中，将存储器的深度改为13，
+如下面代码所示，否则综合会提示 FPGA 逻辑资源不够。</p>
+<figure class="align-center">
+<img alt="imem1" src="../_images/imem1.png" />
+</figure>
+<figure class="align-center">
+<img alt="dmem" src="../_images/dmem.png" />
+</figure>
+<p>在 SUAT_imem.v 中，需要初始化我们的运行程序，我们在实验代码框架中为你准备了一个初始化文件 <code class="docutils literal notranslate"><span class="pre">yonex.hex</span></code>，
+请将这个文件绝对路径替换到 initial 初始化中，这样在imem中就会初始化完成运行程序，如下图所示：</p>
+<figure class="align-center">
+<img alt="imem2" src="../_images/imem2.png" />
+</figure>
+</section>
+<section id="pll">
+<h3>1.2 添加 PLL<a class="headerlink" href="#pll" title="Link to this heading"></a></h3>
+<p>要让处理器跑起来，时钟是必不可少的。本次实验板卡包括了一个连接在主芯片 Y18 管脚的 100MHz 的晶振，
+而本次的实验需要在50MHz的时钟频率下完成，通过需求设计，输入时钟可以驱动 PLL 产生多种频率的时钟以及相位的变化。Xilinx 提供了时钟向导 IP 核可以帮助用户设计产生不同需求的时钟。</p>
+<p>点击左侧栏 <code class="docutils literal notranslate"><span class="pre">PROJECT</span> <span class="pre">MANAGER</span></code> 下方的 <code class="docutils literal notranslate"><span class="pre">IP</span> <span class="pre">Catalog</span></code></p>
+<figure class="align-center">
+<img alt="clocking" src="../_images/clocking.png" />
+</figure>
+<p>内部晶振为100MHz，要输出50MHz的时钟频率，按键是高电平有效，因此复位选择高电平有效。</p>
+<figure class="align-center">
+<img alt="PLL1" src="../_images/PLL1.png" />
+</figure>
+<figure class="align-center">
+<img alt="PLL2" src="../_images/PLL2.png" />
+</figure>
+<p>通过上图配置可以获得一个50MHz的时钟频率给CPU使用，此时这个ip文件被放在工程文件下 <code class="docutils literal notranslate"><span class="pre">ip_user_files/ip/clk_wiz_0</span></code> 中。</p>
+<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="k">module</span><span class="w"> </span><span class="n">clk_wiz_0</span><span class="p">(</span><span class="n">clk_out1</span><span class="p">,</span><span class="w"> </span><span class="n">reset</span><span class="p">,</span><span class="w"> </span><span class="n">locked</span><span class="p">,</span><span class="w"> </span><span class="n">clk_in1</span><span class="p">)</span>
+<span class="w">   </span><span class="k">output</span><span class="w"> </span><span class="n">clk_out1</span><span class="p">;</span>
+<span class="w">   </span><span class="k">input</span><span class="w"> </span><span class="n">reset</span><span class="p">;</span>
+<span class="w">   </span><span class="k">output</span><span class="w"> </span><span class="n">locked</span><span class="p">;</span>
+<span class="w">   </span><span class="k">input</span><span class="w"> </span><span class="n">clk_in1</span><span class="p">;</span>
+<span class="k">endmodule</span>
+</pre></div>
+</div>
+<p>认识一下 PLL 的信号， PLL 会输入一个参考时钟频率，输出一个需要的时钟频率。
+复位信号也很容易理解，我们的 FPGA 板上的按键按下是高电平，因此复位选择高电平有效。</p>
+<p>locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作稳定，0代表还不稳定。
+因此locked信号常用作系统的复位信号，不用担心系统使用同步复位信号因为没有时钟导致没有正常复位的情况。</p>
+<p>因此推荐你使用locked信号作为系统的复位信号，如果极性不一致，取反即可。检查你的所有模块的复位极性是否一致，
+如果不一致，则需要修改为一致。</p>
+</section>
+<section id="id3">
+<h3>1.3 添加顶层文件<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>我们可以添加一个顶层模块，这个模块实例化了 SUAT_top 以及 PLL ，并将端口正确相连。
+顶层文件应该有4个端口，外部晶振时钟输入，外部按键复位输入，UART 的 TX 和 RX 端口。</p>
+<figure class="align-center">
+<img alt="clock" src="../_images/clock.png" />
+</figure>
+<p>外部复位使用按键 S6 ，对应 P20 管脚。UART 的 TX 连接 V18 管脚， RX 连接 Y19 管脚。
+其中V18和Y19管脚是 FPGA 板上连接 USB-UART 的管脚，连接正确后就可以通过 USB-UART 与计算机进行串口通信了。</p>
+<p>所有的管脚电平标准都选择 <code class="docutils literal notranslate"><span class="pre">LVCMOS33</span></code> ，下面给出约束文件示例，你也可以使用图形化方式绑定管脚。</p>
+<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="n">set_property</span><span class="w"> </span><span class="n">PACKAGE_PIN</span><span class="w"> </span><span class="n">V18</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">tx_pad</span><span class="p">]</span>
+<span class="n">set_property</span><span class="w"> </span><span class="n">IOSTANDARD</span><span class="w"> </span><span class="n">LVCMOS33</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">tx_pad</span><span class="p">]</span>
+<span class="n">set_property</span><span class="w"> </span><span class="n">PACKAGE_PIN</span><span class="w"> </span><span class="n">Y19</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">rx_pad</span><span class="p">]</span>
+<span class="n">set_property</span><span class="w"> </span><span class="n">IOSTANDARD</span><span class="w"> </span><span class="n">LVCMOS33</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">rx_pad</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>接下来就可以生成比特流，写入 FPGA 。</p>
+</section>
+</section>
+<section id="id4">
+<h2>2 运行简易程序<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>我们需要使用串口工具来接收和发送串口信号，在Windows上，可以使用 MobaXterm 连接串口。
+选择正确的端口和波特率，即可连接串口。</p>
+<figure class="align-center">
+<img alt="MobaXetrm" src="../_images/MobaXterm.png" />
+</figure>
+<p>在 Ubuntu 下，可以 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">minicom</span></code> 安装 minicom。
+使用 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">minicom</span> <span class="pre">-s</span></code> 打开 minicom ，查看设备 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span> <span class="pre">/dev/ttyUSB*</span></code> ，
+在 minicom 里面选择对应设备和波特率，即可连接串口。</p>
+<p>如果你的串口实现正确，那你应该可以看到串口输出信息显示在你的屏幕上。</p>
+<section id="id5">
+<h3>2.1 第一个程序<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>我们在代码框架中为你准备了一个简单的程序，运行后会在串口输出 Hello SUAT ，并且等待用户输入，
+当你按下按键后，CPU 会读取输入，并将输入的字符发出来，因此你应该可以看到，当你键入 A ，你的串口工具上就会显示 A。</p>
+<p>这个程序在 yonex/src/main 中，你可以修改这个程序，比如输入小写的字母，会输出大写的字母。</p>
+<p>我们还给你准备了3个小程序，在 yonex/src/demo 文件夹中，赶紧来看看吧。</p>
+</section>
+<section id="id6">
+<h3>2.2 谁不想拥有一只绝世好猫<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>有一只脑袋圆圆且脾气温和的绝世好猫，名字叫圆头耄耋，它平时最大的爱好就是哈气。
+左图是耄耋平时乖巧可爱的样子，如果你按下键盘任意按键，耄耋就会对你哈气。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/耄耋.jpg"><img alt="耄耋" src="../_images/%E8%80%84%E8%80%8B.jpg" style="width: 791.25px; height: 375.0px;" />
+</a>
+</figure>
+<p>不要害怕，耄耋很温和，不会伤害你，过几秒钟，它就会恢复如初。</p>
+<p>上面的演示程序是一个简单的交互式程序，它的工作流程如下：</p>
+<ol class="arabic simple">
+<li><p>处理器启动后，通过 UART 向外发送小猫的 ASCII 字符串，在 yonex/include/data.h 中；</p></li>
+<li><p>程序进入等待循环，不断检测 UART 接收寄存器（rx_data）是否有数据；</p></li>
+<li><p>当用户按下键盘上的任意按键时，串口工具将按键字符通过 USB-UART 发送给 FPGA；</p></li>
+<li><p>处理器的 UART 外设接收到数据后，程序检测到 rx_data 不为 0；</p></li>
+<li><p>程序切换到&quot;哈气耄耋&quot;的 ASCII 字符串，通过 UART 发送出去；</p></li>
+<li><p>软件延时一段时间后，程序重新发送&quot;乖巧耄耋&quot;的字符串，回到等待状态。</p></li>
+</ol>
+<p>这个演示程序虽然简单，但它涵盖了处理器与外设交互的核心流程：
+<strong>轮询 UART 接收 → 处理 → MMIO 发送 UART 数据</strong>。</p>
+<p>在实验代码框架根目录中， <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">hachimi</span></code> 就会在build目录中编译 hachimi.hex ，将 imem.v 中的初始化文件替换为 hachimi.hex，重新生成比特流即可。
+去跟圆头耄耋互动吧。</p>
+</section>
+<section id="id7">
+<h3>2.3 2048小游戏<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>2048 是 经典益智小游戏，玩家通过上下左右滑动方块，将相同的数字合并，目标是组合出2048方块。</p>
+<ol class="arabic simple">
+<li><p>棋盘与初始数字：游戏在4×4的方格棋盘上进行，初始会随机生成两个数字方块，通常为2或4。</p></li>
+<li><p>移动与合并：玩家每次可以选择上下左右一个方向滑动，所有方块会向该方向靠拢。相同数字的方块碰撞时会合并，合并后的数字为原数字之和（如2+2=4，4+4=8）。</p></li>
+<li><p>新增方块：每次有效移动后，系统会在空白格随机生成一个新方块，90%概率为2，10%概率为4。</p></li>
+<li><p>得分机制：每次合并的数字即为得分，分数累加。</p></li>
+<li><p>游戏结束条件：当棋盘被填满且没有可合并的相邻方块时，游戏结束。</p></li>
+</ol>
+<p>我们的2048是字符串版本，界面比较简陋，WASD用于上下左右移动，Q直接结束本局，R直接开启新的一局,
+按键不区分大小写。每次开局之前需要按下任意按键作为随机数种子。</p>
+<p>同样，使用 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">2048</span></code> 即可编译出 2048.hex，放入imem.v中，重新生成比特流下载到FPGA上。</p>
+<div class="admonition mytodo">
+  <p class="admonition-title">GAME 2048</p>
+  <p>不来玩一下2048吗，将你的最好记录截屏放在实验报告中。
+  2048好的策略是什么呢，如何能够得到更大的数字，写下你的看法。</p>
+</div></section>
+<section id="id8">
+<h3>2.4 旋转甜甜圈<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>旋转甜甜圈，短短数百行代码，即可输出一个旋转甜甜圈，这个甜甜圈也是字符版本的。
+字符的密度代表亮度，比如 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 的亮度就比 <code class="docutils literal notranslate"><span class="pre">.</span></code> 高， .,-~:;=!*#$&#64; 这些字符的亮度依次升高。
+这些高亮和阴影会带给我们 3D 效果的感觉，如下 GIF 所示。</p>
+<figure class="align-center">
+<img alt="donut" src="../_images/donut.gif" />
+</figure>
+<p>受限于处理器性能限制，我们的甜甜圈尺寸会更小，需要大概2秒计算完1帧画面，因此实际效果并不是很好。
+下面是 donut.c 的混淆代码，刻意调整为了甜甜圈的形状。
+同样， <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">donut</span></code> 生成 donut.hex，快去处理器上试试旋转甜甜圈吧。</p>
+<div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="w">                  </span><span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">){</span><span class="n">char</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="mh">1760</span><span class="p">];</span>
+<span class="w">             </span><span class="n">screen_reset</span><span class="p">();</span><span class="k">signed</span><span class="w"> </span><span class="n">char</span><span class="w"> </span><span class="n">z</span><span class="p">[</span><span class="mh">1760</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sA</span><span class="o">=</span><span class="mh">1024</span><span class="p">,</span><span class="n">cA</span><span class="o">=</span><span class="mh">0</span><span class="p">,</span><span class="n">sB</span><span class="o">=</span><span class="mh">1024</span><span class="p">,</span><span class="n">cB</span><span class="o">=</span><span class="mh">0</span><span class="p">,</span><span class="n">_</span><span class="p">;</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span>
+<span class="w">      </span><span class="n">R2</span><span class="o">=</span><span class="mh">2048</span><span class="p">,</span><span class="n">K2</span><span class="o">=</span><span class="mh">5120</span><span class="o">*</span><span class="mh">1024</span><span class="p">;</span><span class="k">while</span><span class="p">(</span><span class="mh">1</span><span class="p">){</span><span class="n">memset</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="mh">32</span><span class="p">,</span><span class="mh">1760</span><span class="p">)</span>
+<span class="w">    </span><span class="p">;</span><span class="n">memset</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mh">127</span><span class="p">,</span><span class="mh">1760</span><span class="p">);</span><span class="kt">int</span><span class="w"> </span><span class="n">sj</span><span class="o">=</span><span class="mh">0</span><span class="p">,</span><span class="n">cj</span><span class="o">=</span><span class="mh">1024</span><span class="p">;</span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mh">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mh">60</span>
+<span class="w">   </span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span><span class="kt">int</span><span class="w"> </span><span class="n">si</span><span class="o">=</span><span class="mh">0</span><span class="p">,</span><span class="n">ci</span><span class="o">=</span><span class="mh">1024</span><span class="p">;</span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mh">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mh">216</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="kt">int</span><span class="w"> </span><span class="n">x0</span><span class="o">=</span><span class="n">cj</span>
+<span class="w">  </span><span class="o">+</span><span class="n">R2</span><span class="p">,</span><span class="n">x1</span><span class="o">=</span><span class="n">ci</span><span class="o">*</span><span class="n">x0</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">,</span><span class="n">x2</span><span class="o">=</span><span class="n">cA</span><span class="o">*</span><span class="n">sj</span><span class="w">        </span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">,</span><span class="n">x3</span><span class="o">=</span><span class="n">si</span><span class="o">*</span><span class="n">x0</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">,</span><span class="n">x4</span><span class="o">=</span><span class="n">x2</span><span class="o">-</span>
+<span class="w"> </span><span class="p">(</span><span class="n">sA</span><span class="o">*</span><span class="n">x3</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">),</span><span class="n">x5</span><span class="o">=</span><span class="n">sA</span><span class="o">*</span><span class="n">sj</span><span class="o">&gt;&gt;</span><span class="w">               </span><span class="mh">10</span><span class="p">,</span><span class="n">x6</span><span class="o">=</span><span class="n">K2</span><span class="o">+</span><span class="mh">1024</span><span class="o">*</span><span class="n">x5</span><span class="o">+</span><span class="n">cA</span><span class="o">*</span><span class="n">x3</span>
+<span class="p">,</span><span class="n">x7</span><span class="o">=</span><span class="n">cj</span><span class="o">*</span><span class="n">si</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">;</span><span class="kt">int</span><span class="w"> </span><span class="n">cbx1</span><span class="w">                 </span><span class="o">=</span><span class="n">cB</span><span class="o">*</span><span class="n">x1</span><span class="p">,</span><span class="n">sbx4</span><span class="o">=</span><span class="n">sB</span><span class="o">*</span><span class="n">x4</span><span class="p">;</span><span class="kt">int</span>
+<span class="n">x</span><span class="o">=</span><span class="mh">25</span><span class="o">+</span><span class="n">pdiv</span><span class="p">(</span><span class="mh">30</span><span class="o">*</span><span class="p">(</span><span class="n">cbx1</span><span class="o">-</span><span class="n">sbx4</span><span class="w">               </span><span class="p">),</span><span class="n">x6</span><span class="p">),</span><span class="n">y</span><span class="o">=</span><span class="mh">12</span><span class="o">+</span><span class="n">pdiv</span><span class="p">(</span><span class="mh">15</span><span class="o">*</span><span class="p">(</span><span class="n">cB</span>
+<span class="o">*</span><span class="n">x4</span><span class="o">+</span><span class="n">sB</span><span class="o">*</span><span class="n">x1</span><span class="p">),</span><span class="n">x6</span><span class="p">),</span><span class="n">N</span><span class="o">=</span><span class="p">(((</span><span class="o">-</span><span class="n">cA</span><span class="o">*</span><span class="w">              </span><span class="n">x7</span><span class="o">-</span><span class="n">cB</span><span class="o">*</span><span class="p">((</span><span class="o">-</span><span class="n">sA</span><span class="o">*</span><span class="n">x7</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">)</span><span class="o">+</span><span class="n">x2</span>
+<span class="w"> </span><span class="p">)</span><span class="o">-</span><span class="n">ci</span><span class="o">*</span><span class="p">(</span><span class="n">cj</span><span class="o">*</span><span class="n">sB</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mh">10</span><span class="p">)</span><span class="o">-</span><span class="w">             </span><span class="cm">/**/</span><span class="n">x5</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mh">7</span><span class="p">;</span><span class="kt">int</span><span class="w"> </span><span class="n">o</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mh">80</span><span class="o">*</span><span class="n">y</span><span class="p">;</span>
+<span class="w">  </span><span class="k">signed</span><span class="w"> </span><span class="n">char</span><span class="w"> </span><span class="n">zz</span><span class="o">=</span><span class="p">(</span><span class="n">x6</span><span class="o">-</span><span class="n">K2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mh">15</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="mh">22</span><span class="o">&gt;</span><span class="n">y</span><span class="o">&amp;&amp;</span><span class="n">y</span><span class="o">&gt;</span><span class="mh">0</span><span class="o">&amp;&amp;</span><span class="n">x</span><span class="o">&gt;</span><span class="mh">0</span><span class="o">&amp;&amp;</span><span class="mh">80</span><span class="o">&gt;</span><span class="n">x</span><span class="o">&amp;&amp;</span><span class="n">zz</span><span class="o">&lt;</span><span class="n">z</span><span class="p">[</span><span class="n">o</span>
+<span class="w">   </span><span class="p">]){</span><span class="n">z</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span><span class="n">zz</span><span class="p">;</span><span class="n">b</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span><span class="s">&quot;.,-~:;=!*#$@&quot;</span><span class="p">[</span><span class="n">N</span><span class="o">&gt;</span><span class="mh">0</span><span class="o">?</span><span class="nl">N:</span><span class="mh">0</span><span class="p">];}</span><span class="n">R</span><span class="p">(</span><span class="mh">8</span><span class="p">,</span><span class="mh">8</span><span class="p">,</span><span class="n">ci</span><span class="p">,</span><span class="n">si</span><span class="p">);}</span>
+<span class="w">     </span><span class="n">R</span><span class="p">(</span><span class="mh">14</span><span class="p">,</span><span class="mh">7</span><span class="p">,</span><span class="n">cj</span><span class="p">,</span><span class="n">sj</span><span class="p">);}</span><span class="n">R</span><span class="p">(</span><span class="mh">5</span><span class="p">,</span><span class="mh">7</span><span class="p">,</span><span class="n">cA</span><span class="p">,</span><span class="n">sA</span><span class="p">);</span><span class="n">R</span><span class="p">(</span><span class="mh">5</span><span class="p">,</span><span class="mh">8</span><span class="p">,</span><span class="n">cB</span><span class="p">,</span><span class="n">sB</span><span class="p">);</span><span class="cm">/*donut.c*/</span>
+<span class="w">       </span><span class="n">screen_clear</span><span class="p">();</span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="mh">0</span><span class="p">;</span><span class="n">y</span><span class="o">&lt;</span><span class="mh">22</span><span class="p">;</span><span class="n">y</span><span class="o">++</span><span class="p">){</span><span class="n">uart_putstr</span>
+<span class="w">         </span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span><span class="n">char</span><span class="w"> </span><span class="n">tmp</span><span class="o">=</span><span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="o">*</span><span class="mh">80</span><span class="o">+</span><span class="mh">50</span><span class="p">];</span><span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="o">*</span><span class="mh">80</span><span class="o">+</span><span class="mh">50</span><span class="p">]</span><span class="o">=</span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="w">             </span><span class="n">uart_putstr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="o">*</span><span class="mh">80</span><span class="p">]);</span><span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="o">*</span><span class="mh">80</span><span class="o">+</span><span class="mh">50</span><span class="p">]</span><span class="o">=</span>
+<span class="w">                 </span><span class="n">tmp</span><span class="p">;}}</span><span class="k">return</span><span class="w"> </span><span class="mh">0</span><span class="p">;}</span><span class="c1">//by hxc.</span>
+</pre></div>
+</div>
+<div class="admonition myoption">
+  <p class="admonition-title">旋转甜甜圈donut</p>
+  <p>如果你对这段代码，其背后的原理感兴趣，在互联网上搜索STFW，
+  信息还是很多的，你可以用几十行动手实现一个python的版本，每秒几十帧画面的效果会好很多，
+  就像 GIF 图那样。</p>
+</div><p>恭喜你完成了全部七个实验！
+从第一行汇编代码，到 ALU、单周期处理器、多周期处理器、UART 外设，
+再到 FPGA 上运行你自己的程序——你已经亲手构建了一台能够真正运行的计算机。
+虽然简单，但你已经触摸到了&quot;计算机组成原理&quot;。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="lab6.html" class="btn btn-neutral float-left" title="简易串口设计" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="TODO.html" class="btn btn-neutral float-right" title="There&#39;s nothing here" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2026, 陈奕含，黄夕祠，余伟杰，李一庚。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
