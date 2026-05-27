@@ -116,7 +116,7 @@
 <figure class="align-center">
 <img alt="dmem" src="../_images/dmem.png" />
 </figure>
-<p>在 SUAT_imem.v 中，需要初始化我们的运行程序，我们在实验代码框架中为你准备了一个初始化文件 <code class="docutils literal notranslate"><span class="pre">yonex.hex</span></code>，
+<p>在 SUAT_imem.v 中，需要初始化我们的运行程序，我们在实验代码框架中为你准备了一个初始化文件 <code class="docutils literal notranslate"><span class="pre">main.hex</span></code>，
 请将这个文件绝对路径替换到 initial 初始化中，这样在imem中就会初始化完成运行程序，如下图所示：</p>
 <figure class="align-center">
 <img alt="imem2" src="../_images/imem2.png" />
@@ -152,16 +152,19 @@
 因此locked信号常用作系统的复位信号，不用担心系统使用同步复位信号因为没有时钟导致没有正常复位的情况。</p>
 <p>因此推荐你使用locked信号作为系统的复位信号，如果极性不一致，取反即可。检查你的所有模块的复位极性是否一致，
 如果不一致，则需要修改为一致。</p>
+<figure class="align-center">
+<img alt="wavedrom" src="../_images/wavedrom.png" />
+</figure>
 </section>
 <section id="id3">
 <h3>1.3 添加顶层文件<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>我们可以添加一个顶层模块，这个模块实例化了 SUAT_top 以及 PLL ，并将端口正确相连。
 顶层文件应该有4个端口，外部晶振时钟输入，外部按键复位输入，UART 的 TX 和 RX 端口。</p>
-<figure class="align-center">
-<img alt="clock" src="../_images/clock.png" />
-</figure>
-<p>外部复位使用按键 S6 ，对应 P20 管脚。UART 的 TX 连接 V18 管脚， RX 连接 Y19 管脚。
+<p><strong>外部晶振连接管脚Y18，频率为100Mhz。外部复位使用按键 S6 ，对应 P20 管脚。UART 的 TX 连接 V18 管脚， RX 连接 Y19 管脚。</strong>
 其中V18和Y19管脚是 FPGA 板上连接 USB-UART 的管脚，连接正确后就可以通过 USB-UART 与计算机进行串口通信了。</p>
+<figure class="align-center">
+<img alt="结构示意图" src="../_images/%E7%BB%93%E6%9E%84%E7%A4%BA%E6%84%8F%E5%9B%BE1.jpg" />
+</figure>
 <p>所有的管脚电平标准都选择 <code class="docutils literal notranslate"><span class="pre">LVCMOS33</span></code> ，下面给出约束文件示例，你也可以使用图形化方式绑定管脚。</p>
 <div class="highlight-v notranslate"><div class="highlight"><pre><span></span><span class="n">set_property</span><span class="w"> </span><span class="n">PACKAGE_PIN</span><span class="w"> </span><span class="n">V18</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">tx_pad</span><span class="p">]</span>
 <span class="n">set_property</span><span class="w"> </span><span class="n">IOSTANDARD</span><span class="w"> </span><span class="n">LVCMOS33</span><span class="w"> </span><span class="p">[</span><span class="n">get_ports</span><span class="w"> </span><span class="n">tx_pad</span><span class="p">]</span>
@@ -174,12 +177,16 @@
 </section>
 <section id="id4">
 <h2>2 运行简易程序<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<p>我们需要使用串口工具来接收和发送串口信号，在Windows上，可以使用 MobaXterm 连接串口。
+<p>我们需要使用串口工具来接收和发送串口信号。</p>
+<p><strong>在Windows上，可以使用 MobaXterm 连接串口。</strong>
 选择正确的端口和波特率，即可连接串口。</p>
 <figure class="align-center">
 <img alt="MobaXetrm" src="../_images/MobaXterm.png" />
 </figure>
-<p>在 Ubuntu 下，可以 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">minicom</span></code> 安装 minicom。
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>在 Ubuntu 下</strong>，可以 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">minicom</span></code> 安装 minicom。
 使用 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">minicom</span> <span class="pre">-s</span></code> 打开 minicom ，查看设备 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span> <span class="pre">/dev/ttyUSB*</span></code> ，
 在 minicom 里面选择对应设备和波特率，即可连接串口。</p>
 <p>如果你的串口实现正确，那你应该可以看到串口输出信息显示在你的屏幕上。</p>
@@ -209,7 +216,7 @@
 <li><p>软件延时一段时间后，程序重新发送&quot;乖巧耄耋&quot;的字符串，回到等待状态。</p></li>
 </ol>
 <p>这个演示程序虽然简单，但它涵盖了处理器与外设交互的核心流程：
-<strong>轮询 UART 接收 → 处理 → MMIO 发送 UART 数据</strong>。</p>
+<strong>轮询 UART 接收 → 处理 → 发送 UART 数据</strong>。</p>
 <p>在实验代码框架根目录中， <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">hachimi</span></code> 就会在build目录中编译 hachimi.hex ，将 imem.v 中的初始化文件替换为 hachimi.hex，重新生成比特流即可。
 去跟圆头耄耋互动吧。</p>
 </section>

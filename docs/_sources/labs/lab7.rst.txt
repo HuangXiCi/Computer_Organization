@@ -31,7 +31,7 @@
    :align: center
 
 
-在 SUAT_imem.v 中，需要初始化我们的运行程序，我们在实验代码框架中为你准备了一个初始化文件 ``yonex.hex``，
+在 SUAT_imem.v 中，需要初始化我们的运行程序，我们在实验代码框架中为你准备了一个初始化文件 ``main.hex``，
 请将这个文件绝对路径替换到 initial 初始化中，这样在imem中就会初始化完成运行程序，如下图所示：
 
 .. figure:: ../picture/lab7/imem2.png
@@ -83,18 +83,22 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 因此推荐你使用locked信号作为系统的复位信号，如果极性不一致，取反即可。检查你的所有模块的复位极性是否一致，
 如果不一致，则需要修改为一致。
 
+.. figure:: ../picture/lab7/wavedrom.png
+   :alt: wavedrom
+   :align: center
+
 1.3 添加顶层文件
 -----------------------------------------
 
 我们可以添加一个顶层模块，这个模块实例化了 SUAT_top 以及 PLL ，并将端口正确相连。
 顶层文件应该有4个端口，外部晶振时钟输入，外部按键复位输入，UART 的 TX 和 RX 端口。
 
-.. figure:: ../picture/lab7/clock.png
-   :alt: clock
-   :align: center
-
-外部复位使用按键 S6 ，对应 P20 管脚。UART 的 TX 连接 V18 管脚， RX 连接 Y19 管脚。
+**外部晶振连接管脚Y18，频率为100Mhz。外部复位使用按键 S6 ，对应 P20 管脚。UART 的 TX 连接 V18 管脚， RX 连接 Y19 管脚。**
 其中V18和Y19管脚是 FPGA 板上连接 USB-UART 的管脚，连接正确后就可以通过 USB-UART 与计算机进行串口通信了。
+
+.. figure:: ../picture/lab7/结构示意图.jpg
+   :alt: 结构示意图
+   :align: center
 
 所有的管脚电平标准都选择 ``LVCMOS33`` ，下面给出约束文件示例，你也可以使用图形化方式绑定管脚。
 
@@ -111,15 +115,18 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 2 运行简易程序
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-我们需要使用串口工具来接收和发送串口信号，在Windows上，可以使用 MobaXterm 连接串口。
+我们需要使用串口工具来接收和发送串口信号。
+
+**在Windows上，可以使用 MobaXterm 连接串口。**
 选择正确的端口和波特率，即可连接串口。
 
 .. figure:: ../picture/lab7/MobaXterm.png
    :alt: MobaXetrm
    :align: center
 
+|
 
-在 Ubuntu 下，可以 ``sudo apt install minicom`` 安装 minicom。
+**在 Ubuntu 下**，可以 ``sudo apt install minicom`` 安装 minicom。
 使用 ``sudo minicom -s`` 打开 minicom ，查看设备 ``ls -l /dev/ttyUSB*`` ，
 在 minicom 里面选择对应设备和波特率，即可连接串口。
 
@@ -158,7 +165,7 @@ locked信号用来指示 PLL 输出时钟的工作状态，为1时代表工作�
 6. 软件延时一段时间后，程序重新发送"乖巧耄耋"的字符串，回到等待状态。
 
 这个演示程序虽然简单，但它涵盖了处理器与外设交互的核心流程：
-**轮询 UART 接收 → 处理 → MMIO 发送 UART 数据**。
+**轮询 UART 接收 → 处理 → 发送 UART 数据**。
 
 在实验代码框架根目录中， ``make hachimi`` 就会在build目录中编译 hachimi.hex ，将 imem.v 中的初始化文件替换为 hachimi.hex，重新生成比特流即可。
 去跟圆头耄耋互动吧。
